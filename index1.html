@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>Quiz</title>
+</head>
+
+<body>
+  <h1>Quiz</h1>
+
+  <!-- Questions and Answers Array -->
+
+  <script src="questions2.js"></script>
+
+  <!-- Quiz Container -->
+  <div id="quiz-container">
+    <p id="qz_question_number"></p>
+    <p id="question_number"></p>
+    <p id="question"></p>
+    <img id="image" style="display: none;">
+    <ul id="answers"></ul>
+    <button id="submit-answer">Submit Answer</button>
+    <p id="result"></p>
+    <button id="next-question" style="display: none;">Next Question</button>
+  </div>
+
+  <!-- Grade Container -->
+  <p id="grade" style="display: none;"></p>
+
+  <!-- Questions Container -->
+  <div id="questions-container">
+    <h2>Questions</h2>
+    <ul id="questions-list"></ul>
+  </div>
+
+  <!-- Quiz Script -->
+  <script>
+    // Initialize variables
+    var currentQuestion = 0;
+    var score = 0;
+    var quiz_length = 25;
+    var images_folder = "H2";
+    var questions_file = "questions2.js";
+
+    // Shuffle the answers in the question
+    function shuffle_answers(question) {
+      // Check if answer 4 exists and meets the conditions
+      if (question.answers.length > 3 && question.answers[3].indexOf("תשוב") === -1 && question.answers[3] !== "") {
+        // Shuffle the answers using the Fisher-Yates shuffle algorithm
+        for (var i = question.answers.length - 1; i > 0; i--) {
+          var j = Math.floor(Math.random() * (i + 1));
+          var temp = question.answers[i];
+          question.answers[i] = question.answers[j];
+          question.answers[j] = temp;
+          if (i === question.correctAnswer) {
+            question.correctAnswer = j;
+          }
+          else if (j === question.correctAnswer) {
+            question.correctAnswer = i;
+          }
+        }
+      }
+    }
+
+    // Shuffle the questions
+    function shuffle(array) {
+      for (var i = array.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+        shuffle_answers(array[i]);
+      }
+
+      return array;
+    }
+
+
+    // Display the current question and its answers
+    function displayQuestion() {
+      var image = new Image();
+      var len = questions[currentQuestion].question_number.length;
+      var image_path = images_folder + "/i" + parseInt(questions[currentQuestion].question_number.substring(0, 3)) + ".png";
+      image.onerror = function () {
+        document.getElementById("image").style.display = "none";
+      }
+      image.onload = function () {
+        document.getElementById("image").src = image_path;
+        document.getElementById("image").style.display = "block";
+      }
+      document.getElementById("qz_question_number").innerHTML = "Question " + (currentQuestion + 1) + " of " + quiz_length;
+      document.getElementById("question_number").innerHTML = "שאלה " + questions[currentQuestion].question_number;
+      document.getElementById("question").innerHTML = questions[currentQuestion].question;
+      document.getElementById("answers").innerHTML = "";
+
+      image.src = image_path;
+
+      for (var i = 0; i < questions[currentQuestion].answers.length; i++) {
+        if (questions[currentQuestion].answers[i].length > 0)
+          document.getElementById("answers").innerHTML += "<li><input type='radio' name='answer' value='" + i + "'>" + questions[currentQuestion].answers[i] + "</li>";
+      }
+    }
+
+    // Submit the user's answer and display the result
+    document.getElementById("submit-answer").addEventListener("click", function () {
+      var userAnswer = document.querySelector("input[name='answer']:checked").value;
+      if (questions[currentQuestion].correctAnswer == -1) {
+        questions[currentQuestion].correctAnswer = questions[currentQuestion].answerAI;
+      }
+      if (userAnswer == questions[currentQuestion].correctAnswer) {
+        document.getElementById("result").innerHTML = "Correct!";
+        score++;
+        //answerContainer.style.color = "green";
+      } else {
+        //answerContainer.style.color = "red";
+        document.getElementById("result").innerHTML = "Incorrect! The correct answer is " + questions[currentQuestion].answers[questions[currentQuestion].correctAnswer];
+      }
+      document.getElementById("submit-answer").style.display = "none";
+      document.getElementById("next-question").style.display = "block";
+    });
+
+    // Display the next question or grade the quiz
+    document.getElementById("next-question").addEventListener("click", function () {
+      currentQuestion++;
+      if (currentQuestion == quiz_length) {
+        document.getElementById("quiz-container").style.display = "none";
+        document.getElementById("grade").innerHTML = "Score: " + score + "/" + currentQuestion + " - Final Grade: " + (score / quiz_length * 100).toFixed(0);//questions.length
+        document.getElementById("grade").style.display = "block";
+      } else {
+
+
+        displayQuestion();
+        document.getElementById("result").innerHTML = "";
+        document.getElementById("submit-answer").style.display = "block";
+        document.getElementById("next-question").style.display = "none";
+      }
+    });
+
+    // Start the quiz
+    shuffle(questions);
+    displayQuestion();
+  </script>
+</body>
+
+<form id="answers-form">
+  <div class="answers-form"></div>
+  <button type="submit">Submit Answers</button>
+</form>
+
+</html>
