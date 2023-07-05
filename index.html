@@ -93,7 +93,7 @@
 
   <!-- Questions Container -->
   <div id="questions-container">
-    <h2>Questions</h2>
+    <h2 style="font-size: 17px;">Questions</h2>
     <ul id="questions-list"></ul>
   </div>
 
@@ -280,7 +280,18 @@
         });
         let avg = filteredQSTATS.reduce((a, b) => a + b, 0) / filteredQSTATS.length;
         if (type.type == 1) {
-          avg = (avg + 100)/2;
+          if (avg < 70)
+          {
+            avg = (avg + avg + 50)/3;
+          }
+          else if (avg > 80)
+          {
+            avg = (avg + 100)/2;
+          }
+          else 
+          {
+            avg = (avg + 81)/2;
+          }
         }
         document.getElementById("type-" + type.type).textContent = " " + type.name;
         document.getElementById("avg-grade-" + type.type).textContent = " " + avg.toFixed(1);
