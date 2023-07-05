@@ -29,48 +29,48 @@
     <div>
       <button onclick="selectExamType(1)" class="quiz-button">
         <div><img src="H2/type1.png"></div>
-        <div><span id="avg-type-1"></span></div>
+        <div><span id="type-1"></span></div>
         <div><span id="avg-grade-1" style="font-size: 36px;"></span></div>
       </button>
       <button onclick="selectExamType(2)" class="quiz-button">
         <div><img src="H2/type2.png"></div>
-        <div><span id="avg-type-2"></span></div>
+        <div><span id="type-2"></span></div>
         <div><span id="avg-grade-2" style="font-size: 36px;"></span></div>
       </button>
     </div>
     <div>
       <button onclick="selectExamType(3)" class="quiz-button">
         <div><img src="H2/type3.png"></div>
-        <div><span id="avg-type-3"></span></div>
+        <div><span id="type-3"></span></div>
         <div><span id="avg-grade-3" style="font-size: 30px;"></span></div>
       </button>
       <button onclick="selectExamType(4)" class="quiz-button">
         <div><img src="H2/type4.png"></div>
-        <div><span id="avg-type-4"></span></div>
+        <div><span id="type-4"></span></div>
         <div><span id="avg-grade-4" style="font-size: 30px;"></span></div>
       </button>
     </div>
     <div>
       <button onclick="selectExamType(5)" class="quiz-button">
         <div><img src="H2/type5.png"></div>
-        <div><span id="avg-type-5"></span></div>
+        <div><span id="type-5"></span></div>
         <div><span id="avg-grade-5" style="font-size: 30px;"></span></div>
       </button>
       <button onclick="selectExamType(6)" class="quiz-button">
         <div><img src="H2/type6.png"></div>
-        <div><span id="avg-type-6"></span></div>
+        <div><span id="type-6"></span></div>
         <div><span id="avg-grade-6" style="font-size: 30px;"></span></div>
       </button>
     </div>
     <div>
       <button onclick="selectExamType(7)" class="quiz-button">
         <div><img src="H2/type7.png"></div>
-        <div><span id="avg-type-7"></span></div>
+        <div><span id="type-7"></span></div>
         <div><span id="avg-grade-7" style="font-size: 30px;"></span></div>
       </button>
       <button onclick="selectExamType(8)" class="quiz-button">
         <div><img src="H2/type8.png"></div>
-        <div><span id="avg-type-8"></span></div>
+        <div><span id="type-8"></span></div>
         <div><span id="avg-grade-8" style="font-size: 30px;"></span></div>
       </button>
     </div>
@@ -256,6 +256,7 @@
         document.getElementById("submit-answer").style.display = "block";
         document.getElementById("next-question").style.display = "none";
       }
+      questionAnswered();
     });
 
     function sendEmail() {
@@ -281,7 +282,7 @@
         if (type.type == 1) {
           avg = (avg + 100)/2;
         }
-        document.getElementById("avg-type-" + type.type).textContent = " " + type.name;
+        document.getElementById("type-" + type.type).textContent = " " + type.name;
         document.getElementById("avg-grade-" + type.type).textContent = " " + avg.toFixed(1);
       });
     }
@@ -296,6 +297,42 @@
       }
       output += "</p>";
       document.body.insertAdjacentHTML('afterbegin', output);
+
+      // Get the total questions answered and total questions answered today from local storage
+      let totalQuestionsAnswered = localStorage.getItem('totalQuestionsAnswered') || 0;
+      let totalQuestionsAnsweredToday = localStorage.getItem('totalQuestionsAnsweredToday') || 0;
+
+      // Display the counts
+      let questionsContainer = document.getElementById('questions-container');
+      let h2 = questionsContainer.querySelector('h2');
+      h2.textContent = `Questions answered today: ${totalQuestionsAnsweredToday} in total: ${totalQuestionsAnswered}`;
+
+      // Other QSTATS displaying code goes here...
+    }
+
+    function questionAnswered() {
+      // Increment the total questions answered and total questions answered today
+      let totalQuestionsAnswered = Number(localStorage.getItem('totalQuestionsAnswered')) || 0;
+      let totalQuestionsAnsweredToday = Number(localStorage.getItem('totalQuestionsAnsweredToday')) || 0;
+      totalQuestionsAnswered++;
+      totalQuestionsAnsweredToday++;
+
+      // Save the updated counts to local storage
+      localStorage.setItem('totalQuestionsAnswered', totalQuestionsAnswered);
+      localStorage.setItem('totalQuestionsAnsweredToday', totalQuestionsAnsweredToday);
+
+      // Other question answered logic goes here...
+      // At the end of your questionAnswered function...
+      let currentDate = new Date().toISOString().slice(0,10); // Get the current date as YYYY-MM-DD
+      localStorage.setItem('lastAnsweredDate', currentDate);
+
+      // When the page is loaded...
+      let lastAnsweredDate = localStorage.getItem('lastAnsweredDate') || '';
+      currentDate = new Date().toISOString().slice(0,10); // Get the current date as YYYY-MM-DD
+      if (currentDate !== lastAnsweredDate) {
+        // If the current date does not match the date when the user last answered a question, reset the count
+        localStorage.setItem('totalQuestionsAnsweredToday', 0);
+      }
     }
 
     displayAverageQSTATs();
