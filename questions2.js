@@ -956,7 +956,7 @@ var questions = [
       "חלוקה זו מבדילה בין מערכת העיכול למערכת הנשימה",
       "החלוקה מבדילה בין החלק המוביל את האוויר והחלק בו מתבצע חילוף הגזים"
     ],
-    correctAnswer: -1,
+    correctAnswer: 0,
     answerAI: 3
   }, {
     question_number: "84",
@@ -979,7 +979,7 @@ var questions = [
       "מכיל את מיתרי הקול הנמתחים בין חלקו הקידמי של סחוס התירואיד לחלקו האחורי",
       "תשובות 1 ו-3 נכונות"
     ],
-    correctAnswer: -1,
+    correctAnswer: 2,
     answerAI: 3 // Assuming that the correct answer is option 4
   },
   {
@@ -1111,7 +1111,7 @@ var questions = [
       "אין שינוי באחוז הפחמן הדו חמצני בשאיפה לבין נשיפה",
       "אין שינוי באחוז החנקן בשאיפה לבין נשיפה"
     ],
-    correctAnswer: -1,
+    correctAnswer: 3,
     answerAI: 1
   },
   {
@@ -1159,7 +1159,7 @@ var questions = [
       "בחלק הסופריורי מדיאלי של העין",
       "בחלק האינפריורי מדיאלי של העין"
     ],
-    correctAnswer: -1,
+    correctAnswer: 0,
     answerAI: 3
   },
   {
@@ -3526,4 +3526,3 @@ var QSTATS = [
   50,
   50,
 ];
-
