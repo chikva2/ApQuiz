@@ -36,6 +36,9 @@
   </div>
 
   <!-- Quiz Script -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <div class="g_id_signin" data-client_id="167338312295-bt8m36deu8n9p14qoao5dda9a6cmbn0f.apps.googleusercontent.com"></div>
+
   <script>
     // Initialize variables
     var currentQuestion = 0;
@@ -43,7 +46,7 @@
     var quiz_length = 25;
     var images_folder = "H2";
     var questions_file = "questions2.js";
-
+    
     // Shuffle the answers in the question
     function shuffle_answers(question) {
       // Check if answer 4 exists and meets the conditions
