@@ -1856,13 +1856,13 @@ var questions = [
     question_number: "159",
     question: "כמה ביציות לערך יש בשחלותיה של נערה מתבגרת ?",
     answers: [
+      "4,000",
       "40,000",
       "400",
-      "400,000",
-      "4,000"
+      "400,000"
     ],
-    correctAnswer: -1,
-    answerAI: 0
+    correctAnswer: 3,
+    answerAI: 1
   },
 
   {
