@@ -129,7 +129,7 @@
 
     localStorage.setItem('QSTATS', JSON.stringify(QSTATS));
 
-    //displayQSTATS();
+    displayQSTATS();
 
     function selectExamType(type) {
       selectedType = examTypes.find(t => t.type === type);
@@ -288,15 +288,15 @@
     }
 
     function displayQSTATS() {
-      let output = "<p>";
-      for(let i = 0; i < QSTATS.length; i++) {
-        output += i + ":" + QSTATS[i] + " ";
-        if ((i + 1) % 20 === 0) {
-          output += "</p><p>";
-        }
-      }
-      output += "</p>";
-      document.body.insertAdjacentHTML('afterbegin', output);
+      //let output = "<p>";
+      //for(let i = 0; i < QSTATS.length; i++) {
+      //  output += i + ":" + QSTATS[i] + " ";
+      //  if ((i + 1) % 20 === 0) {
+      //    output += "</p><p>";
+      //  }
+      //}
+      //output += "</p>";
+      //document.body.insertAdjacentHTML('afterbegin', output);
 
       // Get the total questions answered and total questions answered today from local storage
       let totalQuestionsAnswered = localStorage.getItem('totalQuestionsAnswered') || 0;
