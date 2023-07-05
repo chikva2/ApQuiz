@@ -30,40 +30,48 @@
       <button onclick="selectExamType(1)" class="quiz-button">
         <div><img src="H2/type1.png"></div>
         <div><span id="avg-type-1"></span></div>
+        <div><span id="avg-grade-1" style="font-size: 36px;"></span></div>
       </button>
       <button onclick="selectExamType(2)" class="quiz-button">
         <div><img src="H2/type2.png"></div>
         <div><span id="avg-type-2"></span></div>
+        <div><span id="avg-grade-2" style="font-size: 36px;"></span></div>
       </button>
     </div>
     <div>
       <button onclick="selectExamType(3)" class="quiz-button">
         <div><img src="H2/type3.png"></div>
         <div><span id="avg-type-3"></span></div>
+        <div><span id="avg-grade-3" style="font-size: 36px;"></span></div>
       </button>
       <button onclick="selectExamType(4)" class="quiz-button">
         <div><img src="H2/type4.png"></div>
         <div><span id="avg-type-4"></span></div>
+        <div><span id="avg-grade-4" style="font-size: 36px;"></span></div>
       </button>
     </div>
     <div>
       <button onclick="selectExamType(5)" class="quiz-button">
         <div><img src="H2/type5.png"></div>
         <div><span id="avg-type-5"></span></div>
+        <div><span id="avg-grade-5" style="font-size: 36px;"></span></div>
       </button>
       <button onclick="selectExamType(6)" class="quiz-button">
         <div><img src="H2/type6.png"></div>
         <div><span id="avg-type-6"></span></div>
+        <div><span id="avg-grade-6" style="font-size: 36px;"></span></div>
       </button>
     </div>
     <div>
       <button onclick="selectExamType(7)" class="quiz-button">
         <div><img src="H2/type7.png"></div>
         <div><span id="avg-type-7"></span></div>
+        <div><span id="avg-grade-7" style="font-size: 36px;"></span></div>
       </button>
       <button onclick="selectExamType(8)" class="quiz-button">
         <div><img src="H2/type8.png"></div>
         <div><span id="avg-type-8"></span></div>
+        <div><span id="avg-grade-8" style="font-size: 36px;"></span></div>
       </button>
     </div>
   </div>
@@ -270,7 +278,8 @@
           return value != null;
         });
         let avg = filteredQSTATS.reduce((a, b) => a + b, 0) / filteredQSTATS.length;
-        document.getElementById("avg-type-" + type.type).textContent = " " + type.name + " " + avg.toFixed(1);
+        document.getElementById("avg-type-" + type.type).textContent = " " + type.name;
+        document.getElementById("avg-grade-" + type.type).textContent = " " + avg.toFixed(1);
       });
     }
 
