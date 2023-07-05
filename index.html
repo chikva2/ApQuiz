@@ -42,36 +42,36 @@
       <button onclick="selectExamType(3)" class="quiz-button">
         <div><img src="H2/type3.png"></div>
         <div><span id="avg-type-3"></span></div>
-        <div><span id="avg-grade-3" style="font-size: 36px;"></span></div>
+        <div><span id="avg-grade-3" style="font-size: 30px;"></span></div>
       </button>
       <button onclick="selectExamType(4)" class="quiz-button">
         <div><img src="H2/type4.png"></div>
         <div><span id="avg-type-4"></span></div>
-        <div><span id="avg-grade-4" style="font-size: 36px;"></span></div>
+        <div><span id="avg-grade-4" style="font-size: 30px;"></span></div>
       </button>
     </div>
     <div>
       <button onclick="selectExamType(5)" class="quiz-button">
         <div><img src="H2/type5.png"></div>
         <div><span id="avg-type-5"></span></div>
-        <div><span id="avg-grade-5" style="font-size: 36px;"></span></div>
+        <div><span id="avg-grade-5" style="font-size: 30px;"></span></div>
       </button>
       <button onclick="selectExamType(6)" class="quiz-button">
         <div><img src="H2/type6.png"></div>
         <div><span id="avg-type-6"></span></div>
-        <div><span id="avg-grade-6" style="font-size: 36px;"></span></div>
+        <div><span id="avg-grade-6" style="font-size: 30px;"></span></div>
       </button>
     </div>
     <div>
       <button onclick="selectExamType(7)" class="quiz-button">
         <div><img src="H2/type7.png"></div>
         <div><span id="avg-type-7"></span></div>
-        <div><span id="avg-grade-7" style="font-size: 36px;"></span></div>
+        <div><span id="avg-grade-7" style="font-size: 30px;"></span></div>
       </button>
       <button onclick="selectExamType(8)" class="quiz-button">
         <div><img src="H2/type8.png"></div>
         <div><span id="avg-type-8"></span></div>
-        <div><span id="avg-grade-8" style="font-size: 36px;"></span></div>
+        <div><span id="avg-grade-8" style="font-size: 30px;"></span></div>
       </button>
     </div>
   </div>
@@ -278,6 +278,9 @@
           return value != null;
         });
         let avg = filteredQSTATS.reduce((a, b) => a + b, 0) / filteredQSTATS.length;
+        if (type.type == 1) {
+          avg = (avg + 100)/2;
+        }
         document.getElementById("avg-type-" + type.type).textContent = " " + type.name;
         document.getElementById("avg-grade-" + type.type).textContent = " " + avg.toFixed(1);
       });
