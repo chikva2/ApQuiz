@@ -311,7 +311,7 @@
         });
         let avg = filteredQSTATS.reduce((a, b) => a + b, 0) / filteredQSTATS.length;
         if (type.type == 1) {
-            avg = (avg + 25)/2;
+            avg = (3*avg - 100)/2;
         }
         else if (type.type == 3) {
             avg = (avg + 100)/2;
