@@ -3285,16 +3285,16 @@ var explanations_gpt4 = [
 ];
 
 var QSTATS = [ 
-    null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 
-    null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 
-    null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 
-    null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 
-    null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 
-    null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 
-    null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 
-    null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 
-    null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 
-    null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 
-    null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 
-    null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 ];
