@@ -166,20 +166,6 @@
       }
     }
 
-    function shuffleQuestions1() {
-      questions = questions.slice(selectedType.range[0] - 1, selectedType.range[1]);
-
-      if (selectedType.name === "training") {
-        let lowestQSTATIndices = QSTATS.map((q, i) => [q, i]).sort((a, b) => a[0] - b[0]).slice(0, 15).map(q => q[1]);
-        let otherIndices = Array.from({ length: questions.length }, (_, i) => i).filter(i => !lowestQSTATIndices.includes(i));
-        shuffleArray(otherIndices);
-        otherIndices = otherIndices.slice(0, 10);
-        questions = lowestQSTATIndices.concat(otherIndices).map(i => questions[i]);
-      }
-
-      shuffleArray(questions);
-    }
-
     function shuffleQuestions() {
       questions = questions.slice(selectedType.range[0] - 1, selectedType.range[1]);
 
@@ -255,16 +241,16 @@
           QSTATS[questionNumber] = 90;
         }
         else {
-          QSTATS[questionNumber] = QSTATS[questionNumber] * 0.6 + 40;
+          QSTATS[questionNumber] = QSTATS[questionNumber] * 0.5 + 50;
           QSTATS[questionNumber] = Number(QSTATS[questionNumber].toFixed(1));
         }
       } else {
         document.getElementById("result").innerHTML = "Incorrect! The correct answer is " + question.answers[question.correctAnswer];
         if (QSTATS[questionNumber] == 0) {
-          QSTATS[questionNumber] = 20;
+          QSTATS[questionNumber] = 25;
         }
         else {
-          QSTATS[questionNumber] = QSTATS[questionNumber] * 0.6;
+          QSTATS[questionNumber] = QSTATS[questionNumber] * 0.5;
           QSTATS[questionNumber] = Number(QSTATS[questionNumber].toFixed(1));
         }
       }
