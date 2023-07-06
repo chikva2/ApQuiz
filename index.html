@@ -37,41 +37,44 @@
         <div><span id="type-2"></span></div>
         <div><span id="avg-grade-2" style="font-size: 33px;"></span></div>
       </button>
+      <button onclick="selectExamType(3)" class="quiz-button">
+        <div><img src="H2/easy.png"></div>
+        <div><span id="type-3"></span></div>
+        <div><span id="avg-grade-3" style="font-size: 33px;"></span></div>
+      </button>
     </div>
     <div>
-      <button onclick="selectExamType(3)" class="quiz-button">
-        <div><img src="H2/type3.png"></div>
-        <div><span id="type-3"></span></div>
-        <div><span id="avg-grade-3" style="font-size: 27px;"></span></div>
-      </button>
       <button onclick="selectExamType(4)" class="quiz-button">
-        <div><img src="H2/type4.png"></div>
+        <div><img src="H2/type3.png"></div>
         <div><span id="type-4"></span></div>
         <div><span id="avg-grade-4" style="font-size: 27px;"></span></div>
       </button>
-    </div>
-    <div>
       <button onclick="selectExamType(5)" class="quiz-button">
-        <div><img src="H2/type5.png"></div>
+        <div><img src="H2/type4.png"></div>
         <div><span id="type-5"></span></div>
         <div><span id="avg-grade-5" style="font-size: 27px;"></span></div>
       </button>
       <button onclick="selectExamType(6)" class="quiz-button">
-        <div><img src="H2/type6.png"></div>
+        <div><img src="H2/type5.png"></div>
         <div><span id="type-6"></span></div>
         <div><span id="avg-grade-6" style="font-size: 27px;"></span></div>
       </button>
     </div>
     <div>
       <button onclick="selectExamType(7)" class="quiz-button">
-        <div><img src="H2/type7.png"></div>
+        <div><img src="H2/type6.png"></div>
         <div><span id="type-7"></span></div>
         <div><span id="avg-grade-7" style="font-size: 27px;"></span></div>
       </button>
       <button onclick="selectExamType(8)" class="quiz-button">
-        <div><img src="H2/type8.png"></div>
+        <div><img src="H2/type7.png"></div>
         <div><span id="type-8"></span></div>
         <div><span id="avg-grade-8" style="font-size: 27px;"></span></div>
+      </button>
+      <button onclick="selectExamType(9)" class="quiz-button">
+        <div><img src="H2/type8.png"></div>
+        <div><span id="type-9"></span></div>
+        <div><span id="avg-grade-9" style="font-size: 27px;"></span></div>
       </button>
     </div>
   </div>
@@ -107,27 +110,33 @@
     let questions_file = "questions2.js";
 
     const examTypes = [
-      { type: 1, name: "אימון מתקדם", range: [1, 240] },
+      { type: 1, name: "מבחן מאתגר", range: [1, 240] },
       { type: 2, name: "מבחן רגיל", range: [1, 240] },
-      { type: 3, name: "מערכת הורמונלית", range: [1, 28] },
-      { type: 4, name: "לב כלי דם", range: [29, 81] },
-      { type: 5, name: "מערכת הנשימה", range: [82, 113] },
-      { type: 6, name: "מערכת העיקול", range: [114, 153] },
-      { type: 7, name: "מערכת המין", range: [154, 192] },
-      { type: 8, name: "מערכת החיסון", range: [193, 240] },
+      { type: 3, name: "מבחן קליל", range: [1, 240] },
+      { type: 4, name: "מערכת הורמונלית", range: [1, 28] },
+      { type: 5, name: "לב כלי דם", range: [29, 81] },
+      { type: 6, name: "מערכת הנשימה", range: [82, 113] },
+      { type: 7, name: "מערכת העיקול", range: [114, 153] },
+      { type: 8, name: "מערכת המין", range: [154, 192] },
+      { type: 9, name: "מערכת החיסון", range: [193, 240] },
     ];
     let selectedType = examTypes[0];  // Default to the first type
 
-    //let QSTATS = JSON.parse(localStorage.getItem('QSTATS')) || questions.map(q => q.QSTAT);
+    // Define hardcoded version
+    const hardcodedVersion = '1.0.3';
 
-    QSTATS = JSON.parse(localStorage.getItem('QSTATS')) || QSTATS;
-    for(var i = 0; i < QSTATS.length; i++) {
-      if(QSTATS[i] != null) {
-        QSTATS[i] = Number(QSTATS[i].toFixed(1));
-      }
+    // Get version from localStorage
+    let savedVersion = localStorage.getItem('version');
+
+    // Check if saved version is different from hardcoded version
+    if (savedVersion !== hardcodedVersion) {
+      // If it's different, update localStorage with new version and new QSTATS
+      localStorage.setItem('version', hardcodedVersion);
+      localStorage.setItem('QSTATS', JSON.stringify(QSTATS));
+    } else {
+      // If it's the same, get QSTATS from localStorage
+      QSTATS = JSON.parse(localStorage.getItem('QSTATS')) || QSTATS;
     }
-
-    localStorage.setItem('QSTATS', JSON.stringify(QSTATS));
 
     displayQSTATS();
 
@@ -157,7 +166,7 @@
       }
     }
 
-    function shuffleQuestions() {
+    function shuffleQuestions1() {
       questions = questions.slice(selectedType.range[0] - 1, selectedType.range[1]);
 
       if (selectedType.name === "training") {
@@ -170,6 +179,28 @@
 
       shuffleArray(questions);
     }
+
+    function shuffleQuestions() {
+      questions = questions.slice(selectedType.range[0] - 1, selectedType.range[1]);
+
+      if (selectedType.type === 1 || selectedType.type >= 4) {
+        let lowestQSTATIndices = QSTATS.map((q, i) => [q, i]).sort((a, b) => a[0] - b[0]).slice(0, 15).map(q => q[1]);
+        let otherIndices = Array.from({ length: questions.length }, (_, i) => i).filter(i => !lowestQSTATIndices.includes(i));
+        shuffleArray(otherIndices);
+        otherIndices = otherIndices.slice(0, 10);
+        questions = lowestQSTATIndices.concat(otherIndices).map(i => questions[i]);
+      }
+      else if (selectedType.type === 3) {
+        let highestQSTATIndices = QSTATS.map((q, i) => [q, i]).sort((a, b) => b[0] - a[0]).slice(0, 15).map(q => q[1]);
+        let otherIndices = Array.from({ length: questions.length }, (_, i) => i).filter(i => !highestQSTATIndices.includes(i));
+        shuffleArray(otherIndices);
+        otherIndices = otherIndices.slice(0, 10);
+        questions = highestQSTATIndices.concat(otherIndices).map(i => questions[i]);
+      }
+
+      shuffleArray(questions);
+    }
+
 
     function shuffleArray(array) {
       for (let i = array.length - 1; i > 0; i--) {
@@ -220,20 +251,20 @@
       if (userAnswer == question.correctAnswer) {
         document.getElementById("result").innerHTML = "Correct!";
         score++;
-        if (QSTATS[questionNumber] == null) {
-          QSTATS[questionNumber] = 100;
+        if (QSTATS[questionNumber] == 0) {
+          QSTATS[questionNumber] = 90;
         }
         else {
-          QSTATS[questionNumber] = QSTATS[questionNumber] * 0.7 + 30;
+          QSTATS[questionNumber] = QSTATS[questionNumber] * 0.6 + 40;
           QSTATS[questionNumber] = Number(QSTATS[questionNumber].toFixed(1));
         }
       } else {
         document.getElementById("result").innerHTML = "Incorrect! The correct answer is " + question.answers[question.correctAnswer];
-        if (QSTATS[questionNumber] == null) {
-          QSTATS[questionNumber] = 0;
+        if (QSTATS[questionNumber] == 0) {
+          QSTATS[questionNumber] = 20;
         }
         else {
-          QSTATS[questionNumber] = QSTATS[questionNumber] * 0.7;
+          QSTATS[questionNumber] = QSTATS[questionNumber] * 0.6;
           QSTATS[questionNumber] = Number(QSTATS[questionNumber].toFixed(1));
         }
       }
@@ -276,22 +307,14 @@
       examTypes.forEach((type) => {
         let qstatsInRange = QSTATS.slice(type.range[0] - 1, type.range[1]);
         var filteredQSTATS = qstatsInRange.filter(function(value) {
-          return value != null;
+          return value != null && value != 0;
         });
         let avg = filteredQSTATS.reduce((a, b) => a + b, 0) / filteredQSTATS.length;
         if (type.type == 1) {
-          if (avg < 70)
-          {
-            avg = (avg + avg + 50)/3;
-          }
-          else if (avg > 80)
-          {
+            avg = (avg + 25)/2;
+        }
+        else if (type.type == 3) {
             avg = (avg + 100)/2;
-          }
-          else 
-          {
-            avg = (avg + 81)/2;
-          }
         }
         document.getElementById("type-" + type.type).textContent = " " + type.name;
         document.getElementById("avg-grade-" + type.type).textContent = " " + avg.toFixed(1);
@@ -300,9 +323,11 @@
 
     function displayQSTATS() {
       //let output = "<p>";
-      //for(let i = 0; i < QSTATS.length; i++) {
-      //  output += i + ":" + QSTATS[i] + " ";
-      //  if ((i + 1) % 20 === 0) {
+      //for(let i = 1; i <= QSTATS.length; i++) {
+      //let paddedI = String(i).padStart(3, '0');
+      //let paddedQSTATS = QSTATS[i] === 0 ? '--' : String(QSTATS[i]).padStart(2, '0');
+      //output += paddedI + ":" + paddedQSTATS + " ";
+      //if (i % 30 === 0 && i != 0) {
       //    output += "</p><p>";
       //  }
       //}
