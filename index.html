@@ -169,7 +169,7 @@
     function shuffleQuestions() {
       questions = questions.slice(selectedType.range[0] - 1, selectedType.range[1]);
 
-      if (selectedType.type === 1 || selectedType.type >= 4) {
+      if (selectedType.type === 1) {
         let lowestQSTATIndices = QSTATS.map((q, i) => [q, i]).sort((a, b) => a[0] - b[0]).slice(0, 15).map(q => q[1]);
         let otherIndices = Array.from({ length: questions.length }, (_, i) => i).filter(i => !lowestQSTATIndices.includes(i));
         shuffleArray(otherIndices);
