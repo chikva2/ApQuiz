@@ -132,6 +132,9 @@
     if (savedVersion !== hardcodedVersion) {
       // If it's the same, get QSTATS from localStorage
       QSTATS = JSON.parse(localStorage.getItem('QSTATS')) || QSTATS;
+      QSTATS[11] = 0;
+      QSTATS[53] = 0;
+      QSTATS[67] = 0;
       QSTATS[143] = 0;
       QSTATS[154] = 0;
       QSTATS[157] = 0;
