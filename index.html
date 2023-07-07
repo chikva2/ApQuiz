@@ -123,7 +123,7 @@
     let selectedType = examTypes[0];  // Default to the first type
 
     // Define hardcoded version
-    const hardcodedVersion = '1.0.5';
+    const hardcodedVersion = '1.0.0';
 
     // Get version from localStorage
     let savedVersion = localStorage.getItem('version');
@@ -302,7 +302,7 @@
         document.getElementById("grade").innerHTML = "Score: " + score + "/" + currentQuestion + " - Final Grade: " + (score / quiz_length * 100).toFixed(0);//questions.length
         document.getElementById("grade").style.display = "block";
         sendEmail();
-        //displayAverageQSTAT(examTypes[0].range);
+        reduceAllQstats();
       } else {
         displayQuestion();
         document.getElementById("result").innerHTML = "";
@@ -316,14 +316,6 @@
       // Implement your email sending code here...
     }
 
-    function displayAverageQSTAT(range) {
-      let qstatsInRange = QSTATS.slice(range[0] - 1, range[1]);
-      var filteredQSTATS = qstatsInRange.filter(function(value) {
-        return value != null;
-      });
-      let avg = filteredQSTATS.reduce((a, b) => a + b, 0) / filteredQSTATS.length;
-      document.getElementById("grade").innerHTML += "<br>Average QSTAT for this exam type: " + avg.toFixed(1);
-    }
 
     function displayAverageQSTATs() {
       examTypes.forEach((type) => {
@@ -366,6 +358,15 @@
       h2.textContent = `Questions answered today: ${totalQuestionsAnsweredToday} in total: ${totalQuestionsAnswered}`;
 
       // Other QSTATS displaying code goes here...
+    }
+
+    function reduceAllQstats() {
+      for(let i = 1; i < QSTATS.length; i++) {
+        if(QSTATS[i] > 5) {
+           QSTATS[i] = QSTATS[i] - 0.1;
+        }
+      }
+      localStorage.setItem('QSTATS', JSON.stringify(QSTATS));
     }
 
     function questionAnswered() {
