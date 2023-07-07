@@ -1673,20 +1673,20 @@ var questions = [
       "עיקר הביקרבונט מיוצר בכבד",
       "התריסריון הוא החלק הארוך ביותר במעי הדק"
     ],
-    correctAnswer: -1,
+    correctAnswer: 1,
     answerAI: 3
   },
   {
     question_number: "144",
     question: "מה מאפיין את האזור בשן המסומן בחץ שבאיור?",
     answers: [
+      "בו עוברים כלי הדם המזינים את השן",
       "זהו החלק החלש ביותר בשן",
       "אינו מסוגל להתחדש",
-      "בו עוברים כלי הדם המזינים את השן",
       "רגיש מאוד למגע"
     ],
-    correctAnswer: 1,
-    answerAI: 1
+    correctAnswer: 2,
+    answerAI: 2
   },
   {
     question_number: "145",
@@ -1740,13 +1740,13 @@ var questions = [
     question_number: "149",
     question: "מהו שם המבנה המסומן בחץ שבאיור?",
     answers: [
-      "אונת הכבד הימנית",
-      "אונת הכבד התחתונה",
       "הטחול",
-      "כיס המרה"
+      "אונת הכבד הימנית",
+      "כיס המרה",
+      "אונת הכבד התחתונה"
     ],
-    correctAnswer: 3,
-    answerAI: 3
+    correctAnswer: 2,
+    answerAI: 2
   },
   {
     question_number: "150",
@@ -1801,7 +1801,7 @@ var questions = [
       "ההפריה מתקיימת בדרך כלל בשחלה",
       "צוואר הרחם ממוקם סופריורית (מעל) לגוף הרחם"
     ],
-    correctAnswer: -1,
+    correctAnswer: 1,
     answerAI: 3
   },
   {
@@ -1832,12 +1832,12 @@ var questions = [
     question_number: "157",
     question: "מה נכון לגבי בדיקת הריון ?",
     answers: [
-      "מודדת הורמונים הנמצאים בגוף האשה כל הזמן (גם כשלא בהריון)",
       "מתבססת על בדיקת עובי רירית הרחם",
       "קשורה להורמון המופרש מהגופיף הצהוב",
-      "ככל שגיל ההריון יותר מבוגר‪ ,‬כך הבדיקה יותר מהימנה"
+      "ככל שגיל ההריון יותר מבוגר‪ ,‬כך הבדיקה יותר מהימנה",
+      "מודדת הורמונים הנמצאים בגוף האשה כל הזמן (גם כשלא בהריון)"
     ],
-    correctAnswer: -1,
+    correctAnswer: 2,
     answerAI: 2
   },
   {
@@ -1962,7 +1962,7 @@ var questions = [
       "פי הטבעת----פתח הלדן----פתח השופכה----דגדגן",
       "דגדגן----פתח הלדן----פתח השופכה----רקטום"
     ],
-    correctAnswer: -1,
+    correctAnswer: 2,
     answerAI: 0
   },
   {
@@ -1998,7 +1998,7 @@ var questions = [
       "המפגש בין תא הזרע לתא הביצית",
       "יציאת הביצית מהזקיק והשחלה"
     ],
-    correctAnswer: -1,
+    correctAnswer: 3,
     answerAI: 2
   },
   {
@@ -2046,7 +2046,7 @@ var questions = [
       "טסטוסטרון",
       "אוקסיטוצין"
     ],
-    correctAnswer: -1,
+    correctAnswer: 0,
     answerAI: 3
   },
   {
@@ -2118,7 +2118,7 @@ var questions = [
       "צינור הזרע (Ductus Deference)",
       "עילית האשך (Epididymus)"
     ],
-    correctAnswer: -1,
+    correctAnswer: 2,
     answerAI: 0
   },
   {
@@ -2154,7 +2154,7 @@ var questions = [
       "תאי הזרע מיוצרים בשלפוחיות הזרע",
       "כל התשובות אינן נכונות"
     ],
-    correctAnswer: -1,
+    correctAnswer: 3,
     answerAI: 0
   },
   {
@@ -2166,8 +2166,20 @@ var questions = [
       "אסטרוגן וLH",
       "FSH וGnRH"
     ],
-    correctAnswer: -1,
+    correctAnswer: 1,
     answerAI: 0
+  },
+  {
+    question_number: "187",
+    question: "מה מהבאים איננו טיפול בהריון חוץ רחמי ?",
+    answers: [
+      "סיום הריון ניתוחי",
+      "סיום הריון תרופתי",
+      "העברה לחלל הרחם",
+      "המתנה והשגחה"
+    ],
+    correctAnswer: 2,
+    answerAI: 2
   },
   {
     question_number: "188",
@@ -2220,7 +2232,7 @@ var questions = [
       "נכון",
       "לא־נכון"
     ],
-    correctAnswer: -1,
+    correctAnswer: 1,
     answerAI: 0
   },
   {
@@ -2244,7 +2256,7 @@ var questions = [
       "חיסון סביל מכיל פתוגנים מומתים",
       "משתמשים בחיסון פעיל כשיש סבירות גבוהה להדבקה ואין זמן למערכת החיסון לפתח חיסון משלה"
     ],
-    correctAnswer: -1,
+    correctAnswer: 1,
     answerAI: 0
   },
   {
@@ -2395,7 +2407,7 @@ var questions = [
       "תא פלסמה הוא לימפוציט מסוג T בוגר",
       "מתחלקת לשלוש זרועות"
     ],
-    correctAnswer: -1,
+    correctAnswer: 0,
     answerAI: 1
   },
   {
@@ -2455,7 +2467,7 @@ var questions = [
       "תא בלען המציג אנטיגנים ללימפוציטים",
       "הורג תאים שנדבקו בווירוסים"
     ],
-    correctAnswer: -1,
+    correctAnswer: 2,
     answerAI: 1
   },
   {
@@ -2467,7 +2479,7 @@ var questions = [
       "חיונית ליצירת נוגדנים",
       "חשובה להתפתחות ה\"זיכרון החיסוני\""
     ],
-    correctAnswer: -1,
+    correctAnswer: 1,
     answerAI: 0
   },
   {
@@ -2499,7 +2511,7 @@ var questions = [
       "מופרש בעת עלייה בנפח הדם",
       "משפיע בעיקר על האבובית הקריבנית (פרוקסימלית)"
     ],
-    correctAnswer: -1,
+    correctAnswer: 1,
     answerAI: 0
   },
   {
@@ -2511,7 +2523,7 @@ var questions = [
       "מעבירה שתן מהכליה לשלפוחית השתן",
       "משמשת בגברים גם להובלת זרע"
     ],
-    correctAnswer: -1,
+    correctAnswer: 2,
     answerAI: 1
   },
   {
@@ -2523,7 +2535,7 @@ var questions = [
       "כוללת שתי כליות",
       "כוללת שופכה אחת"
     ],
-    correctAnswer: -1,
+    correctAnswer: 1,
     answerAI: 0
   },
   {
@@ -2559,7 +2571,7 @@ var questions = [
       "כ 4 סמ״ק לק״ג לשעה",
       "כ 5 ליטר ביממה"
     ],
-    correctAnswer: -1,
+    correctAnswer: 0,
     answerAI: 1
   },
   {
@@ -2571,7 +2583,7 @@ var questions = [
       "הכליה מייצרת ויטמין ‪D‬ פעיל בהשפעת בלוטת הפאראתאירואיד (יותרת התריס)",
       "הכליה גורמת להרס מוגבר של תאים אדומים באמצעות שחרור אריתרופויטין"
     ],
-    correctAnswer: -1,
+    correctAnswer: 2,
     answerAI: 1
   },
   {
@@ -2619,7 +2631,7 @@ var questions = [
       "אבובית רחיקנית (דיסטלית)",
       "פקעית (גלומרולוס)"
     ],
-    correctAnswer: -1,
+    correctAnswer: 1,
     answerAI: 2
   },
   {
@@ -2631,7 +2643,7 @@ var questions = [
       "השופכה במערכת השתן הנקבית קצרה יותר לעומת הגברית",
       "אדם בוגר מפריש בממוצע 5 ליטר שתן ביממה"
     ],
-    correctAnswer: -1,
+    correctAnswer: 3,
     answerAI: 0
   },
   {
@@ -2667,7 +2679,7 @@ var questions = [
       "רנין",
       "אנגיוטנסינוגן"
     ],
-    correctAnswer: -1,
+    correctAnswer: 1,
     answerAI: 2
   },
   {
@@ -2691,7 +2703,7 @@ var questions = [
       "לולאת הנלה (Loop of Henle)",
       "אבובית רחיקנית (Distal Tubule)"
     ],
-    correctAnswer: -1,
+    correctAnswer: 2,
     answerAI: 2
   },
   {
@@ -2703,7 +2715,7 @@ var questions = [
       "אבובית רחיקנית (Distal Tubule)",
       "צינור איסוף (Collecting Duct)"
     ],
-    correctAnswer: -1,
+    correctAnswer: 3,
     answerAI: 1
   },
   {
@@ -2715,7 +2727,7 @@ var questions = [
       "B",
       "D"
     ],
-    correctAnswer: -1,
+    correctAnswer: 3,
     answerAI: 2
   },
   {
@@ -2739,7 +2751,7 @@ var questions = [
       "מעודד ייצור של תאי דם לבנים",
       "מופרש מבלוטת התריס"
     ],
-    correctAnswer: -1,
+    correctAnswer: 1,
     answerAI: 0
   },
   {
@@ -2763,7 +2775,7 @@ var questions = [
       "מכילה את צינור האיסוף",
       "מחולקת לפירמידות"
     ],
-    correctAnswer: -1,
+    correctAnswer: 1,
     answerAI: 0
   },
   {
@@ -2775,7 +2787,7 @@ var questions = [
       "מנקז אליו מספר נפרונים",
       "מושפע מאסטרדיול ומ‪ADH -‬"
     ],
-    correctAnswer: -1,
+    correctAnswer: 3,
     answerAI: 1
   },
   {
@@ -2787,7 +2799,7 @@ var questions = [
       "נמצאות בגובה חוליה ‪T5‬",
       "נמצאות מעל לסרעפת"
     ],
-    correctAnswer: -1,
+    correctAnswer: 1,
     answerAI: 2
   }
 ];
