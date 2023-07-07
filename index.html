@@ -110,8 +110,8 @@
     let questions_file = "questions2.js";
 
     const examTypes = [
-      { type: 1, name: "מבחן מאתגר (מומלץ)", range: [1, 240] },
-      { type: 2, name: "צפי לציון במבחן אמיתי", range: [1, 240] },
+      { type: 1, name: "מבחן מאתגר", range: [1, 240] },
+      { type: 2, name: "מבחן רגיל", range: [1, 240] },
       { type: 3, name: "מבחן קליל", range: [1, 240] },
       { type: 4, name: "המערכת ההורמונלית", range: [1, 28] },
       { type: 5, name: "לב, כלי הדם ולימפה", range: [29, 81] },
@@ -123,13 +123,41 @@
     let selectedType = examTypes[0];  // Default to the first type
 
     // Define hardcoded version
-    const hardcodedVersion = '1.0.3';
+    const hardcodedVersion = '1.0.0';
 
     // Get version from localStorage
     let savedVersion = localStorage.getItem('version');
 
     // Check if saved version is different from hardcoded version
     if (savedVersion !== hardcodedVersion) {
+      // If it's the same, get QSTATS from localStorage
+      QSTATS = JSON.parse(localStorage.getItem('QSTATS')) || QSTATS;
+      QSTATS[143] = 0;
+      QSTATS[154] = 0;
+      QSTATS[157] = 0;
+      QSTATS[169] = 0;
+      QSTATS[172] = 0;
+      QSTATS[176] = 0;
+      QSTATS[182] = 0;
+      QSTATS[185] = 0;
+      QSTATS[186] = 0;
+      QSTATS[187] = 0;
+      QSTATS[192] = 0;
+      QSTATS[194] = 0;
+      QSTATS[207] = 0;
+      QSTATS[212] = 0;
+      QSTATS[213] = 0;
+      QSTATS[217] = 0;
+      QSTATS[218] = 0;
+      QSTATS[221] = 0;
+      QSTATS[222] = 0;
+      QSTATS[227] = 0;
+      QSTATS[232] = 0;
+      QSTATS[233] = 0;
+      QSTATS[238] = 0;
+      QSTATS[239] = 0;
+      QSTATS[240] = 0;
+
       // If it's different, update localStorage with new version and new QSTATS
       localStorage.setItem('version', hardcodedVersion);
       localStorage.setItem('QSTATS', JSON.stringify(QSTATS));
@@ -169,6 +197,7 @@
     function shuffleQuestions() {
       questions = questions.slice(selectedType.range[0] - 1, selectedType.range[1]);
 
+      //if (selectedType.type === 1 || selectedType.type >= 4) {
       if (selectedType.type === 1) {
         let lowestQSTATIndices = QSTATS.map((q, i) => [q, i]).sort((a, b) => a[0] - b[0]).slice(0, 15).map(q => q[1]);
         let otherIndices = Array.from({ length: questions.length }, (_, i) => i).filter(i => !lowestQSTATIndices.includes(i));
@@ -199,6 +228,16 @@
     function startQuiz() {
       document.getElementById("exam-selection").style.display = "none";
       document.getElementById("quiz-container").style.display = "block";
+
+      //let output = "<p>";
+      //for (let i = 0; i < quiz_length; i++) {
+      //  let paddedI = String(i).padStart(2, '0');
+      //  let paddedQnum = String(questions[i].question_number).padStart(3, '0');
+      //  output += paddedI + ":" + paddedQnum + " ";
+      //}
+      //output += "</p><p>";
+      //document.body.insertAdjacentHTML('afterbegin', output);
+
       displayQuestion();
     }
 
@@ -266,7 +305,7 @@
         document.getElementById("grade").innerHTML = "Score: " + score + "/" + currentQuestion + " - Final Grade: " + (score / quiz_length * 100).toFixed(0);//questions.length
         document.getElementById("grade").style.display = "block";
         sendEmail();
-        displayAverageQSTAT(examTypes[0].range);
+        //displayAverageQSTAT(examTypes[selectedType].range);
       } else {
         displayQuestion();
         document.getElementById("result").innerHTML = "";
@@ -283,7 +322,7 @@
     function displayAverageQSTAT(range) {
       let qstatsInRange = QSTATS.slice(range[0] - 1, range[1]);
       var filteredQSTATS = qstatsInRange.filter(function(value) {
-        return value != null;
+        return value != null && value != 0;
       });
       let avg = filteredQSTATS.reduce((a, b) => a + b, 0) / filteredQSTATS.length;
       document.getElementById("grade").innerHTML += "<br>Average QSTAT for this exam type: " + avg.toFixed(1);
@@ -308,17 +347,17 @@
     }
 
     function displayQSTATS() {
-      //let output = "<p>";
-      //for(let i = 1; i <= QSTATS.length; i++) {
-      //let paddedI = String(i).padStart(3, '0');
-      //let paddedQSTATS = QSTATS[i] === 0 ? '--' : String(QSTATS[i]).padStart(2, '0');
-      //output += paddedI + ":" + paddedQSTATS + " ";
-      //if (i % 30 === 0 && i != 0) {
-      //    output += "</p><p>";
-      //  }
-      //}
-      //output += "</p>";
-      //document.body.insertAdjacentHTML('afterbegin', output);
+      let output = "<p>";
+      for(let i = 1; i < QSTATS.length; i++) {
+        let paddedI = String(i).padStart(3, '0');
+        let paddedQSTATS = QSTATS[i] === 0 ? '--' : String(QSTATS[i]).padStart(2, '0');
+        output += paddedI + ":" + paddedQSTATS + " ";
+        if (i % 30 === 0 && i != 0) {
+          output += "</p><p>";
+        }
+      }
+      output += "</p>";
+      document.body.insertAdjacentHTML('afterbegin', output);
 
       // Get the total questions answered and total questions answered today from local storage
       let totalQuestionsAnswered = localStorage.getItem('totalQuestionsAnswered') || 0;
