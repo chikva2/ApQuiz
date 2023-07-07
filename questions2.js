@@ -1613,7 +1613,7 @@ var questions = [
       "תא צ'יף",
       "תא פריאטלי"
     ],
-    correctAnswer: -1,
+    correctAnswer: 1,
     answerAI: 3
   },
   {
