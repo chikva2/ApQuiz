@@ -243,16 +243,16 @@
         document.getElementById("result").innerHTML = "Correct!";
         score++;
         if (QSTATS[questionNumber] == 0) {
-          QSTATS[questionNumber] = 92;
+          QSTATS[questionNumber] = 96;
         }
         else {
-          QSTATS[questionNumber] = QSTATS[questionNumber] * 0.5 + 50;
+          QSTATS[questionNumber] = QSTATS[questionNumber] * 0.5 + 50.1;
           QSTATS[questionNumber] = Number(QSTATS[questionNumber].toFixed(1));
         }
       } else {
         document.getElementById("result").innerHTML = "Incorrect! The correct answer is " + question.answers[question.correctAnswer];
         if (QSTATS[questionNumber] == 0) {
-          QSTATS[questionNumber] = 25;
+          QSTATS[questionNumber] = 32;
         }
         else {
           QSTATS[questionNumber] = QSTATS[questionNumber] * 0.5;
@@ -332,7 +332,7 @@
     function reduceAllQstats() {
       for(let i = 1; i < QSTATS.length; i++) {
         if(QSTATS[i] > 5) {
-           QSTATS[i] = QSTATS[i] - 0.1;
+           QSTATS[i] = QSTATS[i] - 0.04;
            QSTATS[i] = Math.round(QSTATS[i] * 10) / 10;
         }
       }
