@@ -333,7 +333,7 @@
       for(let i = 1; i < QSTATS.length; i++) {
         if(QSTATS[i] > 5) {
            QSTATS[i] = QSTATS[i] - 0.04;
-           QSTATS[i] = Math.round(QSTATS[i] * 10) / 10;
+           QSTATS[i] = Math.round(QSTATS[i] * 100) / 100;
         }
       }
       localStorage.setItem('QSTATS', JSON.stringify(QSTATS));
