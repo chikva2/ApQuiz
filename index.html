@@ -123,7 +123,7 @@
     let selectedType = examTypes[0];  // Default to the first type
 
     // Define hardcoded version
-    const hardcodedVersion = '1.0.0';
+    const hardcodedVersion = '1.0.7';
 
     // Get version from localStorage
     let savedVersion = localStorage.getItem('version');
@@ -134,6 +134,8 @@
       QSTATS = JSON.parse(localStorage.getItem('QSTATS')) || QSTATS;
       //QSTATS[11] = 0;
 
+      localStorage.setItem('totalQuestionsAnsweredToday', 0);
+      
       // If it's different, update localStorage with new version and new QSTATS
       localStorage.setItem('version', hardcodedVersion);
       localStorage.setItem('QSTATS', JSON.stringify(QSTATS));
