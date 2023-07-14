@@ -1649,7 +1649,7 @@ var questions = [
       "פירוק המזון",
       "ספיגת רעלים"
     ],
-    correctAnswer: -1,
+    correctAnswer: 0,
     answerAI: 3
   },
   {
