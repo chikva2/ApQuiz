@@ -2,7 +2,12 @@ var questions = [
   {
     question_number: "1",
     question: "איזו מהבלוטות הבאות יוצאת דופן ?",
-    answers: ["דמעות", "זיעה", "רוק", "אדרנל"],
+    answers: [
+      "דמעות",
+      "זיעה",
+      "רוק",
+      "אדרנל"
+    ],
     correctAnswer: -1,
     answerAI: 3
   },
@@ -16,14 +21,24 @@ var questions = [
   {
     question_number: "3",
     question: "איזה הורמון מייצרים תאי אלפא בלבלב ?",
-    answers: ["אדרנלין", "גלוקגון", "אינסולין", "סומטוסטטין"],
+    answers: [
+      "אדרנלין",
+      "גלוקגון",
+      "אינסולין",
+      "סומטוסטטין"
+    ],
     correctAnswer: -1,
     answerAI: 1
   },
   {
     question_number: "4",
     question: "מי מבין החומרים הבאים הוא תוצר אקסוקריני של הלבלב ?",
-    answers: ["גלוקגון", "אינסולין", "עמילאז", "אדרנלין"],
+    answers: [
+      "גלוקגון",
+      "אינסולין",
+      "עמילאז",
+      "אדרנלין"
+    ],
     correctAnswer: -1,
     answerAI: 2
   },
@@ -54,7 +69,12 @@ var questions = [
   {
     question_number: "7",
     question: "עיכוב ייצור של ‪TSH‬ על ידי רמות גבוהות של תירוקסין הוא דוגמה ל‪:‬",
-    answers: ["משוב חיובי", "קשת רפלקס", "שחרור מושהה", "משוב שלילי"],
+    answers: [
+      "משוב חיובי",
+      "קשת רפלקס",
+      "שחרור מושהה",
+      "משוב שלילי"
+    ],
     correctAnswer: -1,
     answerAI: 3
   },
@@ -694,7 +714,7 @@ var questions = [
       "‬לעלייה שמאל נכנסים ורידים בהם דם עשיר בחמצן‬",
       "‬כל התשובות שגויות‬"
     ],
-    correctAnswer: -1,
+    correctAnswer: 2,
     answerAI: 3
   },
   {
@@ -886,7 +906,7 @@ var questions = [
       "החדר הימני הוא שמזרים דם לכל חלקי הגוף",
       "הדם בעורקי הריאה דל בחמצן"
     ],
-    correctAnswer: -1,
+    correctAnswer: 3,
     answerAI: 0
   },
   {
@@ -922,7 +942,7 @@ var questions = [
       "תחילת הסיסטולה",
       "סוף הדיאסטולה"
     ],
-    correctAnswer: -1,
+    correctAnswer: 2,
     answerAI: 0
   },
   {
@@ -967,7 +987,7 @@ var questions = [
       "אוויר מרטיט את מיתרי הקול",
       "כל התשובות נכונות"
     ],
-    correctAnswer: -1,
+    correctAnswer: 3,
     answerAI: 2
   },
   {
@@ -1709,7 +1729,7 @@ var questions = [
       "הכבד מצוי בצידו הימני של האגן",
       "הלבלב צמוד לדופן הבטן האחורית"
     ],
-    correctAnswer: -1,
+    correctAnswer: 3,
     answerAI: 1
   },
   {
