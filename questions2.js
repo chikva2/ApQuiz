@@ -1409,7 +1409,7 @@ var questions = [
       "‬הצקום (‪cecum‬) המשכי לקולון היורד (השמאלי)‬",
       "‬ריקון הרקטום (חלחולת) נשלט ע'י רפלקס המופעל באמצעות שחרור הסוגר הרצוני‬"
     ],
-    correctAnswer: -1,
+    correctAnswer: 3,
     answerAI: 0
   },
   {
@@ -1445,7 +1445,7 @@ var questions = [
       "מיעוט של חיידקים בגלל פעילות מרובה של מערכת החיסון",
       "תנועתיות איטית"
     ],
-    correctAnswer: -1,
+    correctAnswer: 3,
     answerAI: 1
   },
   {
@@ -1517,7 +1517,7 @@ var questions = [
       "מיצי מרה",
       "גסטרין"
     ],
-    correctAnswer: -1,
+    correctAnswer: 3,
     answerAI: 0
   },
   {
@@ -1565,7 +1565,7 @@ var questions = [
       "המעי הצם (ג'ג'נום)",
       "המעי הכרוך (אילאום)"
     ],
-    correctAnswer: -1,
+    correctAnswer: 1,
     answerAI: 3
   },
   {
@@ -1601,7 +1601,7 @@ var questions = [
       "‬הסוגר התחתון של הקיבה נקרא הסוגר הפילורי‬",
       "בלוטת מיצד האוזן היא השנייה בגודלה מבין בלוטות הרוק‬"
     ],
-    correctAnswer: -1,
+    correctAnswer: 2,
     answerAI: 3
   },
   {
@@ -1637,7 +1637,7 @@ var questions = [
       "סיסים (Villi)",
       "חלוקה למקטעים (Haustra)"
     ],
-    correctAnswer: -1,
+    correctAnswer: 2,
     answerAI: 1
   },
   {
@@ -1721,7 +1721,7 @@ var questions = [
       "פירוק חלבוני קרישה",
       "מאגר ויטמינים דוגמת ויטמין K"
     ],
-    correctAnswer: -1,
+    correctAnswer: 2,
     answerAI: 3
   },
   {
