@@ -1337,7 +1337,7 @@ var questions = [
       "הקיבה נמצאת דיסטאלית לושט ופרוקסימלית לתריסריון",
       "הקיבה מפרידה בין המעי הדק למעי הגס"
     ],
-    correctAnswer: -1,
+    correctAnswer: 2,
     answerAI: 0
   },
   {
@@ -1505,7 +1505,7 @@ var questions = [
       "אורך רב של מעי מפותל",
       "כל התשובות נכונות"
     ],
-    correctAnswer: -1,
+    correctAnswer: 3,
     answerAI: 1
   },
   {
@@ -1769,7 +1769,7 @@ var questions = [
       "‬ייצור חלבונים כמו חלבוני קרישה ואלבומין‬",
       "‬ייצור והפרשת מרה‬"
     ],
-    correctAnswer: -1,
+    correctAnswer: 1,
     answerAI: 3
   },
   {
