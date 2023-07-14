@@ -133,14 +133,17 @@
     if (savedVersion !== hardcodedVersion) {
       // If it's the same, get QSTATS from localStorage
       QSTATS = JSON.parse(localStorage.getItem('QSTATS')) || QSTATS;
+      QSTATS[115] = 0;
       QSTATS[121] = 0;
       QSTATS[124] = 0;
+      QSTATS[129] = 0;
       QSTATS[130] = 0;
       QSTATS[134] = 0;
       QSTATS[137] = 0;
       QSTATS[140] = 0;
       QSTATS[141] = 0;
       QSTATS[147] = 0;
+      QSTATS[151] = 0;
 
       localStorage.setItem('totalQuestionsAnsweredToday', 0);
       
