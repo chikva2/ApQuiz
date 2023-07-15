@@ -1809,7 +1809,7 @@ var questions = [
       "‬נכון",
       "‬לא־נכון"
     ],
-    correctAnswer: -1,
+    correctAnswer: 0,
     answerAI: 1
   },
   {
@@ -1838,7 +1838,7 @@ var questions = [
   },
   {
     question_number: "156",
-    question: "שריר הרחם נקרא ‪:",
+    question: "שריר הרחם נקרא:",
     answers: [
       "Cervix",
       "Fundus",
@@ -1854,7 +1854,7 @@ var questions = [
     answers: [
       "מתבססת על בדיקת עובי רירית הרחם",
       "קשורה להורמון המופרש מהגופיף הצהוב",
-      "ככל שגיל ההריון יותר מבוגר‪ ,‬כך הבדיקה יותר מהימנה",
+      "ככל שגיל ההריון יותר מבוגר,כך הבדיקה יותר מהימנה",
       "מודדת הורמונים הנמצאים בגוף האשה כל הזמן (גם כשלא בהריון)"
     ],
     correctAnswer: 2,
@@ -1894,7 +1894,7 @@ var questions = [
       "ירידה ברמת הפרוגסטרון",
       "ירידה ברמת הFSH"
     ],
-    correctAnswer: -1,
+    correctAnswer: 2,
     answerAI: 0
   },
   {
@@ -1970,7 +1970,7 @@ var questions = [
       "באמצע המחזור, מוביל לביוץ",
       "באמצע המחזור, מוביל להפרשת אסטרוגן"
     ],
-    correctAnswer: -1,
+    correctAnswer: 2,
     answerAI: 0
   },
   {
@@ -2054,7 +2054,7 @@ var questions = [
       "בלוטת הערמונית",
       "שלפוחיות הזרע"
     ],
-    correctAnswer: -1,
+    correctAnswer: 3,
     answerAI: 2
   },
   {
@@ -2114,7 +2114,7 @@ var questions = [
       "ספרמטוציט",
       "ספרמטוגניה"
     ],
-    correctAnswer: -1,
+    correctAnswer: 1,
     answerAI: 2
   },
   {
@@ -2126,7 +2126,7 @@ var questions = [
       "נמצאות על השפתיים הקטנות של הפות",
       "מפרישות ריר בזמן גירוי מיני"
     ],
-    correctAnswer: -1,
+    correctAnswer: 3,
     answerAI: 1
   },
   {
