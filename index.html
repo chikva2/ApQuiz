@@ -51,7 +51,7 @@
         <div><span id="avg-grade-4" style="font-size: 25px;"></span></div>
       </button>
       <button onclick="selectExamType(5)" class="quiz-button">
-        <div><img src="H2/type4.jpg"></div>
+        <div><img src="H2/type4.png"></div>
         <div><span id="type-5"></span></div>
         <div><span id="avg-grade-5" style="font-size: 25px;"></span></div>
       </button>
@@ -124,7 +124,7 @@
     let selectedType = examTypes[0];  // Default to the first type
 
     // Define hardcoded version
-    const hardcodedVersion = '1.1.2';
+    const hardcodedVersion = '1.2.1';
 
     // Get version from localStorage
     let savedVersion = localStorage.getItem('version');
@@ -133,28 +133,12 @@
     if (savedVersion !== hardcodedVersion) {
       // If it's the same, get QSTATS from localStorage
       QSTATS = JSON.parse(localStorage.getItem('QSTATS')) || QSTATS;
-      QSTATS[61] = 0;
-      QSTATS[77] = 0;
-      QSTATS[80] = 0;
-      QSTATS[84] = 0;
-      QSTATS[115] = 0;
-      QSTATS[121] = 0;
-      QSTATS[124] = 0;
-      QSTATS[129] = 0;
-      QSTATS[130] = 0;
-      QSTATS[134] = 0;
-      QSTATS[137] = 0;
-      QSTATS[140] = 0;
-      QSTATS[141] = 0;
-      QSTATS[146] = 0;
-      QSTATS[147] = 0;
-      QSTATS[151] = 0;
-      QSTATS[153] = 0;
-      QSTATS[160] = 0;
-      QSTATS[168] = 0;
-      QSTATS[175] = 0;
-      QSTATS[180] = 0;
-      QSTATS[181] = 0;
+      //QSTATS[61] = 0;
+      for(let i = 1; i < QSTATS.length; i++) {
+        if(QSTATS[i] > 10) {
+           QSTATS[i] = QSTATS[i] - 5;
+        }
+      }
 
       localStorage.setItem('totalQuestionsAnsweredToday', 0);
       
@@ -178,19 +162,20 @@
     function shuffle_answers(question) {
       // Check if answer 4 exists and meets the conditions
       if (question.answers.length > 3 && question.answers[3].indexOf("תשוב") === -1 && question.answers[3] !== "") {
+        if (question.correctAnswer == -1) {
+          question.correctAnswer = question.answerAI;
+        }
+        let correctAnswer = question.answers[question.correctAnswer];
         // Shuffle the answers using the Fisher-Yates shuffle algorithm
         for (var i = question.answers.length - 1; i > 0; i--) {
           var j = Math.floor(Math.random() * (i + 1));
           var temp = question.answers[i];
           question.answers[i] = question.answers[j];
           question.answers[j] = temp;
-          if (i === question.correctAnswer) {
-            question.correctAnswer = j;
-          }
-          else if (j === question.correctAnswer) {
-            question.correctAnswer = i;
-          }
         }
+
+        // Find the new index of the correct answer after shuffling
+        question.correctAnswer = question.answers.indexOf(correctAnswer);
       }
     }
 
@@ -221,7 +206,7 @@
       for (let i = array.length - 1; i > 0; i--) {
         let j = Math.floor(Math.random() * (i + 1));
         [array[i], array[j]] = [array[j], array[i]];
-        //shuffle_answers(array[i]);
+        shuffle_answers(array[i]);
       }
     }
 
@@ -257,14 +242,24 @@
     }
 
     document.getElementById("submit-answer").addEventListener("click", function () {
+      let userAnswerElement = document.querySelector("input[name='answer']:checked");
       let userAnswer = document.querySelector("input[name='answer']:checked").value;
       let question = questions[currentQuestion];
       let questionNumber = parseInt(question.question_number.substring(0, 3));
       if (question.correctAnswer == -1) {
         question.correctAnswer = question.answerAI;
       }
+      let answerElements = document.querySelectorAll("input[name='answer']");
+      let correctAnswerElement;
+      for (let i = 0; i < answerElements.length; i++) {
+        if (answerElements[i].value == question.correctAnswer) {
+          correctAnswerElement = answerElements[i];
+          break;
+        }
+      }
       if (userAnswer == question.correctAnswer) {
         document.getElementById("result").innerHTML = "Correct!";
+        userAnswerElement.parentNode.style.color = "green";
         score++;
         if (QSTATS[questionNumber] == 0) {
           QSTATS[questionNumber] = 96;
@@ -274,7 +269,9 @@
           QSTATS[questionNumber] = Number(QSTATS[questionNumber].toFixed(1));
         }
       } else {
-        document.getElementById("result").innerHTML = "Incorrect! The correct answer is " + question.answers[question.correctAnswer];
+        document.getElementById("result").innerHTML = "Incorrect!";
+        userAnswerElement.parentNode.style.color = "red";
+        correctAnswerElement.parentNode.style.color = "green";
         if (QSTATS[questionNumber] == 0) {
           QSTATS[questionNumber] = 32;
         }
