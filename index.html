@@ -258,7 +258,12 @@
         }
       }
       if (userAnswer == question.correctAnswer) {
-        document.getElementById("result").innerHTML = "Correct!";
+        if(QSTATS[questionNumber] < 80) {
+          document.getElementById("result").innerHTML = "Correct! Great Progress!";
+        }
+        else {
+          document.getElementById("result").innerHTML = "Correct!";
+        }
         userAnswerElement.parentNode.style.color = "green";
         score++;
         if (QSTATS[questionNumber] == 0) {
