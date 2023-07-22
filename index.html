@@ -91,7 +91,8 @@
     <p id="result"></p>
     <button id="next-question" style="display: none;">Next Question</button>
   </div>
-
+  <div id="log"></div>
+  
   <!-- Grade Container -->
   <p id="grade" style="display: none;"></p>
 
@@ -109,6 +110,7 @@
     let quiz_length = 25;
     let images_folder = "H2";
     let questions_file = "questions2.js";
+    let DEBUG = 0;
 
     const examTypes = [
       { type: 1, name: "מבחן מאתגר (מומלץ)", range: [1, 240] },
@@ -124,7 +126,7 @@
     let selectedType = examTypes[0];  // Default to the first type
 
     // Define hardcoded version
-    const hardcodedVersion = '1.2.1';
+    const hardcodedVersion = '1.5';
 
     // Get version from localStorage
     let savedVersion = localStorage.getItem('version');
@@ -134,11 +136,7 @@
       // If it's the same, get QSTATS from localStorage
       QSTATS = JSON.parse(localStorage.getItem('QSTATS')) || QSTATS;
       //QSTATS[61] = 0;
-      for(let i = 1; i < QSTATS.length; i++) {
-        if(QSTATS[i] > 10) {
-           QSTATS[i] = QSTATS[i] - 5;
-        }
-      }
+
 
       localStorage.setItem('totalQuestionsAnsweredToday', 0);
       
@@ -154,8 +152,77 @@
 
     function selectExamType(type) {
       selectedType = examTypes.find(t => t.type === type);
-      shuffleQuestions();
+      setQuestionsOrder();
       startQuiz();
+    }
+
+    function setQuestionsOrder() {
+      for (let i = questions.length - 1; i >= 0; i--) {
+        let questionNumber = parseInt(questions[i].question_number.substring(0, 3));
+        questions[i].qstat = QSTATS[questionNumber];
+      }
+
+      questions = questions.slice(selectedType.range[0] - 1, selectedType.range[1]);
+      QSTATS1   = QSTATS.slice(selectedType.range[0] - 1, selectedType.range[1]);
+      var logDiv = document.getElementById('log');
+      let str1 = "";
+
+      if (selectedType.type === 1) {
+        let lowestQSTATIndices = questions.sort((a, b) => a.qstat - b.qstat).slice(0, 15);
+        str1 = JSON.stringify(lowestQSTATIndices.map(q => q.qstat));
+        let otherIndices = Array.from({ length: questions.length }, (_, i) => i).filter(i => !lowestQSTATIndices.includes(questions[i]));
+        shuffleQuestionsArray(otherIndices);
+        otherIndices = otherIndices.slice(0, 10);
+        questions = lowestQSTATIndices.concat(otherIndices.map(i => questions[i]));
+      }
+      else if (selectedType.type === 3) {
+        let highestQSTATIndices = questions.sort((a, b) => b.qstat - a.qstat).slice(0, 15);
+        str1 = JSON.stringify(highestQSTATIndices.map(q => q.qstat));
+        let otherIndices = Array.from({ length: questions.length }, (_, i) => i).filter(i => !highestQSTATIndices.includes(questions[i]));
+        shuffleQuestionsArray(otherIndices);
+        otherIndices = otherIndices.slice(0, 10);
+        questions = highestQSTATIndices.concat(otherIndices.map(i => questions[i]));
+      }
+      else if (selectedType.type > 3) {
+        questions.sort((a, b) => a.qstat - b.qstat);
+        let firstFiveQuestions = questions.slice(0, 5);
+        str1 = JSON.stringify(firstFiveQuestions.map(q => q.qstat));
+        let remainingQuestions = questions.slice(5);
+        shuffleQuestionsArray(remainingQuestions);
+        questions = firstFiveQuestions.concat(remainingQuestions);
+      }
+
+      questions = questions.slice(0, 25);
+
+      if(DEBUG === 1) {
+        logDiv.innerText = str1 + JSON.stringify(questions, null, 2);
+        var logDiv = document.getElementById('log');
+      }
+
+      if (selectedType.type <= 3) {
+        shuffleQuestionsArray(questions);
+      }
+      shuffleAnswersInQuestionsArray(questions);
+    }
+
+
+    function shuffleQuestionsArray(array) {
+      var logDiv = document.getElementById('log');
+      for (let i = array.length - 1; i >= 0; i--) {
+        let j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+    }
+
+    function shuffleAnswersInQuestionsArray(array) {
+      var logDiv = document.getElementById('log');
+      for (let i = array.length - 1; i >= 0; i--) {
+        try {
+          shuffle_answers(array[i]);
+        } catch (error) {
+          console.error("An error occurred while shuffling the array: ", error);
+        }
+      }
     }
 
     // Shuffle the answers in the question
@@ -179,37 +246,6 @@
       }
     }
 
-    function shuffleQuestions() {
-      questions = questions.slice(selectedType.range[0] - 1, selectedType.range[1]);
-
-      //if (selectedType.type === 1 || selectedType.type >= 4) {
-      if (selectedType.type === 1) {
-        let lowestQSTATIndices = QSTATS.map((q, i) => [q, i]).sort((a, b) => a[0] - b[0]).slice(0, 15).map(q => q[1]);
-        let otherIndices = Array.from({ length: questions.length }, (_, i) => i).filter(i => !lowestQSTATIndices.includes(i));
-        shuffleArray(otherIndices);
-        otherIndices = otherIndices.slice(0, 10);
-        questions = lowestQSTATIndices.concat(otherIndices).map(i => questions[i]);
-      }
-      else if (selectedType.type === 3) {
-        let highestQSTATIndices = QSTATS.map((q, i) => [q, i]).sort((a, b) => b[0] - a[0]).slice(0, 15).map(q => q[1]);
-        let otherIndices = Array.from({ length: questions.length }, (_, i) => i).filter(i => !highestQSTATIndices.includes(i));
-        shuffleArray(otherIndices);
-        otherIndices = otherIndices.slice(0, 10);
-        questions = highestQSTATIndices.concat(otherIndices).map(i => questions[i]);
-      }
-
-      shuffleArray(questions);
-    }
-
-
-    function shuffleArray(array) {
-      for (let i = array.length - 1; i > 0; i--) {
-        let j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-        shuffle_answers(array[i]);
-      }
-    }
-
     function startQuiz() {
       document.getElementById("exam-selection").style.display = "none";
       document.getElementById("quiz-container").style.display = "block";
@@ -219,7 +255,9 @@
     function displayQuestion() {
       let question = questions[currentQuestion];
       document.getElementById("qz_question_number").innerHTML = "Question " + (currentQuestion + 1) + " of " + quiz_length;
-      document.getElementById("question_number").innerHTML = "שאלה " + question.question_number;
+      if (DEBUG == 1) {
+        document.getElementById("question_number").innerHTML = "שאלה " + question.question_number;
+      }
       document.getElementById("question").innerHTML = question.question;
       document.getElementById("answers").innerHTML = "";
 
@@ -257,12 +295,35 @@
           break;
         }
       }
+      let delay = 0;    
       if (userAnswer == question.correctAnswer) {
-        if(QSTATS[questionNumber] < 80) {
-          document.getElementById("result").innerHTML = "Correct! Great Progress!";
-        }
-        else {
-          document.getElementById("result").innerHTML = "Correct!";
+        if(QSTATS[questionNumber] < 90) {
+          delay = 1 + (100 - QSTATS[questionNumber])/30;
+          var countDownDate = new Date().getTime() + delay * 1000;
+
+          document.getElementById("next-question").disabled = true;
+          var x = setInterval(function() {
+            var now = new Date().getTime();
+            var distance = countDownDate - now;
+            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            if(DEBUG === 1) {        
+              correct_str = "Correct! You Have Progress! ❤️ Average increases " + ((100 - QSTATS[questionNumber]) / 500).toFixed(3) + " and " + ((100 - QSTATS[questionNumber]) / 100).toFixed(3) + " ";
+            } else {
+              correct_str = "Correct! You Have Progress! ❤️ ";
+            }
+            document.getElementById("result").innerHTML = correct_str + " Wait " + seconds + " seconds";
+            if (distance < 0) {
+              clearInterval(x);
+              document.getElementById("next-question").disabled = false;
+              document.getElementById("result").innerHTML = correct_str;
+            }
+          }, 1000);
+        } else {
+          if(DEBUG === 1) {        
+            document.getElementById("result").innerHTML = "Correct! Average increases! 💪" + ((100 - QSTATS[questionNumber]) / 500).toFixed(3) + " and " + ((100 - QSTATS[questionNumber]) / 100).toFixed(3);
+          } else {
+            document.getElementById("result").innerHTML = "Correct! 💪";
+          }
         }
         userAnswerElement.parentNode.style.color = "green";
         score++;
@@ -274,7 +335,25 @@
           QSTATS[questionNumber] = Number(QSTATS[questionNumber].toFixed(1));
         }
       } else {
-        document.getElementById("result").innerHTML = "Incorrect!";
+        delay = 4;
+        document.getElementById("next-question").disabled = true;
+        var countDownDate = new Date().getTime() + delay * 1000;
+        var x = setInterval(function() {
+          var now = new Date().getTime();
+          var distance = countDownDate - now;
+          var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+          if(DEBUG === 1) {        
+            incorrect_str = "Incorrect! 🤨 Average decreases " + ((QSTATS[questionNumber]) / 500).toFixed(3) + " and " + ((QSTATS[questionNumber]) / 100).toFixed(3);
+          } else {
+            incorrect_str = "Incorrect! 🤨";
+          }
+          document.getElementById("result").innerHTML = incorrect_str + " wait " + seconds + " seconds";
+          if (distance < 0) {
+            clearInterval(x);
+            document.getElementById("next-question").disabled = false;
+            document.getElementById("result").innerHTML = incorrect_str;
+          }
+        }, 1000);
         userAnswerElement.parentNode.style.color = "red";
         correctAnswerElement.parentNode.style.color = "green";
         if (QSTATS[questionNumber] == 0) {
@@ -331,17 +410,20 @@
     }
 
     function displayQSTATS() {
-      //let output = "<p>";
-      //for(let i = 1; i <= QSTATS.length; i++) {
-      //let paddedI = String(i).padStart(3, '0');
-      //let paddedQSTATS = QSTATS[i] === 0 ? '--' : String(QSTATS[i]).padStart(2, '0');
-      //output += paddedI + ":" + paddedQSTATS + " ";
-      //if (i % 30 === 0 && i != 0) {
-      //    output += "</p><p>";
-      //  }
-      //}
-      //output += "</p>";
-      //document.body.insertAdjacentHTML('afterbegin', output);
+      if(DEBUG === 1) {
+        let output = "<p>";
+        for(let i = 1; i < QSTATS.length; i++) {
+          let paddedI = String(i).padStart(3, '0');
+          QSTATS[i] = Math.round(QSTATS[i] * 100) / 100;
+          let paddedQSTATS = QSTATS[i] === 0 ? '--' : String(QSTATS[i]).padStart(2, '0');
+          output += paddedI + ":" + paddedQSTATS + " ";
+          if (i % 20 === 0 && i != 0) {
+            output += "</p><p>";
+          }
+        }
+        output += "</p>";
+        document.body.insertAdjacentHTML('afterbegin', output);
+      }
 
       // Get the total questions answered and total questions answered today from local storage
       let totalQuestionsAnswered = localStorage.getItem('totalQuestionsAnswered') || 0;
