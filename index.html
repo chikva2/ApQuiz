@@ -306,10 +306,23 @@
             var now = new Date().getTime();
             var distance = countDownDate - now;
             var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            let smiley = "❤️";
+            if(QSTATS[questionNumber] < 60) {
+              smiley += "😗";
+            }
+            if(QSTATS[questionNumber] < 20) {
+              smiley += "😘";
+            }
+            if(QSTATS[questionNumber] < 8) {
+              smiley += "🥰";
+            }
+            if(QSTATS[questionNumber] < 2) {
+              smiley += "😍";
+            }
             if(DEBUG === 1) {        
-              correct_str = "Correct! You Have Progress! ❤️ Average increases " + ((100 - QSTATS[questionNumber]) / 500).toFixed(3) + " and " + ((100 - QSTATS[questionNumber]) / 100).toFixed(3) + " ";
+              correct_str = "Correct! You Have Progress! " + smiley + " Average increases " + ((100 - QSTATS[questionNumber]) / 500).toFixed(3) + " and " + ((100 - QSTATS[questionNumber]) / 100).toFixed(3) + " ";
             } else {
-              correct_str = "Correct! You Have Progress! ❤️ ";
+              correct_str = "Correct! You Have Progress! " + smiley;
             }
             document.getElementById("result").innerHTML = correct_str + " Wait " + seconds + " seconds";
             if (distance < 0) {
@@ -319,10 +332,23 @@
             }
           }, 1000);
         } else {
+          let smiley = "👍";
+          if(QSTATS[questionNumber] > 95) {
+            smiley += "👌";
+          }
+          if(QSTATS[questionNumber] > 98) {
+            smiley += "💪";
+          }
+          if(QSTATS[questionNumber] > 99) {
+            smiley += "🍾";
+          }
+          if(QSTATS[questionNumber] > 99.5) {
+            smiley += "🎉";
+          }
           if(DEBUG === 1) {        
-            document.getElementById("result").innerHTML = "Correct! Average increases! 💪" + ((100 - QSTATS[questionNumber]) / 500).toFixed(3) + " and " + ((100 - QSTATS[questionNumber]) / 100).toFixed(3);
+            document.getElementById("result").innerHTML = "Correct! Average increases! " + smiley + ((100 - QSTATS[questionNumber]) / 500).toFixed(3) + " and " + ((100 - QSTATS[questionNumber]) / 100).toFixed(3);
           } else {
-            document.getElementById("result").innerHTML = "Correct! 💪";
+            document.getElementById("result").innerHTML = "Correct! " + smiley;
           }
         }
         userAnswerElement.parentNode.style.color = "green";
@@ -342,10 +368,23 @@
           var now = new Date().getTime();
           var distance = countDownDate - now;
           var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+          let smiley = "😯";
+          if(QSTATS[questionNumber] < 60) {
+            smiley += "🤨";
+          }
+          if(QSTATS[questionNumber] < 20) {
+            smiley += "😔";
+          }
+          if(QSTATS[questionNumber] < 8) {
+            smiley += "😡";
+          }
+          if(QSTATS[questionNumber] < 2) {
+            smiley += "💩";
+          }
           if(DEBUG === 1) {        
-            incorrect_str = "Incorrect! 🤨 Average decreases " + ((QSTATS[questionNumber]) / 500).toFixed(3) + " and " + ((QSTATS[questionNumber]) / 100).toFixed(3);
+            incorrect_str = "Incorrect! " + smiley + " Average decreases " + ((QSTATS[questionNumber]) / 500).toFixed(3) + " and " + ((QSTATS[questionNumber]) / 100).toFixed(3);
           } else {
-            incorrect_str = "Incorrect! 🤨";
+            incorrect_str = "Incorrect! " + smiley;
           }
           document.getElementById("result").innerHTML = incorrect_str + " wait " + seconds + " seconds";
           if (distance < 0) {
