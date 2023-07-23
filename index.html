@@ -307,16 +307,16 @@
             var distance = countDownDate - now;
             var seconds = Math.floor((distance % (1000 * 60)) / 1000);
             let smiley = "❤️";
-            if(QSTATS[questionNumber] < 60) {
+            if(QSTATS[questionNumber] < 80) {
               smiley += "😗";
             }
-            if(QSTATS[questionNumber] < 20) {
+            if(QSTATS[questionNumber] < 60) {
               smiley += "😘";
             }
-            if(QSTATS[questionNumber] < 8) {
+            if(QSTATS[questionNumber] < 40) {
               smiley += "🥰";
             }
-            if(QSTATS[questionNumber] < 2) {
+            if(QSTATS[questionNumber] < 20) {
               smiley += "😍";
             }
             if(DEBUG === 1) {        
@@ -355,6 +355,10 @@
         score++;
         if (QSTATS[questionNumber] == 0) {
           QSTATS[questionNumber] = 96;
+        }
+        else if (QSTATS[questionNumber] < 60){
+          QSTATS[questionNumber] = QSTATS[questionNumber] + 20;
+          QSTATS[questionNumber] = Number(QSTATS[questionNumber].toFixed(1));
         }
         else {
           QSTATS[questionNumber] = QSTATS[questionNumber] * 0.5 + 50.1;
@@ -410,12 +414,12 @@
 
     document.getElementById("next-question").addEventListener("click", function () {
       currentQuestion++;
+      reduceAllQstats();
       if (currentQuestion == quiz_length) {
         document.getElementById("quiz-container").style.display = "none";
         document.getElementById("grade").innerHTML = "Score: " + score + "/" + currentQuestion + " - Final Grade: " + (score / quiz_length * 100).toFixed(0);//questions.length
         document.getElementById("grade").style.display = "block";
         sendEmail();
-        reduceAllQstats();
       } else {
         displayQuestion();
         document.getElementById("result").innerHTML = "";
@@ -453,7 +457,7 @@
         let output = "<p>";
         for(let i = 1; i < QSTATS.length; i++) {
           let paddedI = String(i).padStart(3, '0');
-          QSTATS[i] = Math.round(QSTATS[i] * 100) / 100;
+          QSTATS[i] = Math.round(QSTATS[i] * 1000) / 1000;
           let paddedQSTATS = QSTATS[i] === 0 ? '--' : String(QSTATS[i]).padStart(2, '0');
           output += paddedI + ":" + paddedQSTATS + " ";
           if (i % 20 === 0 && i != 0) {
@@ -478,9 +482,9 @@
 
     function reduceAllQstats() {
       for(let i = 1; i < QSTATS.length; i++) {
-        if(QSTATS[i] > 5) {
-           QSTATS[i] = QSTATS[i] - 0.04;
-           QSTATS[i] = Math.round(QSTATS[i] * 100) / 100;
+        if(QSTATS[i] > 2) {
+           QSTATS[i] = QSTATS[i] - 0.001;
+           QSTATS[i] = Math.round(QSTATS[i] * 1000) / 1000;
         }
       }
       localStorage.setItem('QSTATS', JSON.stringify(QSTATS));
