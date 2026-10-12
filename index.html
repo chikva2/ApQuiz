@@ -1,6 +1,9 @@
 <!doctype html>
 <html lang="he" dir="rtl">
-<!-- V49: 480 permanent families preserved; six new shopping story variants.
+<!-- V50: salary-based Pepper plan replaces old fixed 1500/2100 rule.
+Monthly salary examples are 5000-8000; signed opening bank balances vary.
+All 480 permanent family IDs, levels and saved Q data remain unchanged.
+V49: 480 permanent families preserved; six new shopping story variants.
 At most 20 distinct calculation/decision types in EVERY topic+level, enforced.
 Level 4 may have more than 20 families only while respecting that unique-type cap.
 Six existing families exchange levels 1/2; generators and family scores survive.
@@ -888,7 +891,8 @@ const PLAIN_WORDS=[
 function plainText(value){
  let s=String(value).normalize('NFC').replace(/[\u0591-\u05BD\u05BF-\u05C7]/g,'');
  for(const [a,b]of PLAIN_WORDS)s=s.replaceAll(a,b);
- for(const [a,b]of [['מהפפר','מ־Pepper'],['בפפר','ב־Pepper'],['לפפר','ל־Pepper'],['הפפר','Pepper'],['פפר','Pepper']])s=s.replaceAll(a,b);
+ for(const [a,b]of [['מהפפר','מ־Pepper'],['בפפר','ב־Pepper'],['לפפר','ל־Pepper'],['הפפר','Pepper'],['פפר','Pepper']])s=s.replace(new RegExp('(^|[^א-ת])'+a+'(?=$|[^א-ת])','g'),(_,before)=>before+b);
+ s=s.replaceAll('Pepperיקה','פפריקה');
  s=s.replace(/(^|[^א-ת])(?:[בכלמהו]?תרגיל)(?=$|[^א-ת])/g,'$1');
  s=s.replace(/כ־(\d+) ח[׳'] מעבר/g,'עברו $1 חודשים').replace(/ב־(\d+) ח[׳']/g,'ב־$1 חודשים');
  s=s.replace(/(\d+(?:\.\d+)?) ≈ (\d+)/g,'$1 מעגלים ל־$2');
@@ -3944,6 +3948,7 @@ function openFinishedReview(){
 function normalizePendingQuestions(){
  reconcileSession41();
  if(!S)return;
+ S.q=refreshMoneyQuestion50(S.q);S.repair=refreshMoneyQuestion50(S.repair);
  S.q=refreshPlainQuestion(S.q);S.repair=refreshPlainQuestion(S.repair);
  S.q=refreshPendingTherapy(S.q);S.repair=refreshPendingTherapy(S.repair);
  // Keep old answers in the statistics, but never serve a deleted question again.
@@ -4447,7 +4452,7 @@ const HELP=[
  {title:'הקו והלבבות',body:'הקו מתמלא כשניסית סוג שאלה חדש, גם אם טעית. יש 300 סוגים פעילים, 50 בכל נושא. הלבבות מראים הצלחה באותו סוג: תשובה נכונה מוסיפה לב, וטעות מורידה לב, עד חמישה. הם אינם משנים את הציון.'}
 ];
 
-function renderHelp(){$('bankSize48').textContent=ACTIVE.length+' משפחות · עד 20 דרכי פתרון בנושא וברמה · גרסה 49';const catalog=helpPage===HELP.length-1;$('exportBtn').textContent=catalog?'מיפוי שאלות ↓':'שמירת גיבוי ↓';$('exportBtn').onclick=catalog?exportQuestionInventory46:exportProgress;const p=HELP[helpPage];setRich('helpTitle',p.title);setRich('helpBody',p.body);$('helpPage').textContent=`${helpPage+1} / ${HELP.length}`;$('helpPrev').disabled=helpPage===0;$('helpNext').textContent=helpPage===HELP.length-1?'בחזרה למשחק':'המשך ←';show('help');}
+function renderHelp(){$('bankSize48').textContent=ACTIVE.length+' משפחות · עד 20 דרכי פתרון בנושא וברמה · גרסה 50';const catalog=helpPage===HELP.length-1;$('exportBtn').textContent=catalog?'מיפוי שאלות ↓':'שמירת גיבוי ↓';$('exportBtn').onclick=catalog?exportQuestionInventory46:exportProgress;const p=HELP[helpPage];setRich('helpTitle',p.title);setRich('helpBody',p.body);$('helpPage').textContent=`${helpPage+1} / ${HELP.length}`;$('helpPrev').disabled=helpPage===0;$('helpNext').textContent=helpPage===HELP.length-1?'בחזרה למשחק':'המשך ←';show('help');}
 function init(){
  load();renderHome();$('lengthPicker').onchange=e=>{const v=+e.target.value;if(SIZES.includes(v)){state.settings.length=v;save();}};
  
@@ -7388,6 +7393,91 @@ for(const variant of SHOPPING_VARIANTS49){
 }
 
 
+// V50: one personal Pepper plan, in shekels. This is a supplied game rule,
+// not a claim about the bank's terms. Keep permanent IDs and all saved Q data.
+const MONEY_RULES50=Object.freeze({salaryMin:5000,salaryMax:8000,salaryStep:100,pepperDailyDivisor:100,exampleMonthDays:30});
+const salary50=()=>R(MONEY_RULES50.salaryMin/100,MONEY_RULES50.salaryMax/100)*100;
+function pepperPlan50(salary,days=30){
+ if(!Number.isFinite(salary)||salary<0||!Number.isInteger(days)||days<1)throw Error('Invalid Pepper plan inputs');
+ return {salary,daily:salary/MONEY_RULES50.pepperDailyDivisor,days,monthly:salary/MONEY_RULES50.pepperDailyDivisor*days};
+}
+const pepperNote50='זה כלל התקציב האישי: המשכורת חלקי 100 היא ההפקדה היומית ל־Pepper.';
+const pepperNudge50='כרטיס הפינוקים משאיר מקום להנאות בתוך גבול מתוכנן. שומרת בנפרד כסף לחשבונות ולחיסכון.';
+const UPDATED50=[];
+function updateMoney50(id,title,types,generator,variation){
+ const t=ACTIVE.find(t=>t.id===id);if(!t)throw Error('Missing permanent family '+id);
+ t.title=title;t.solutionTypes46=types;t.moneyRule50={version:50,variation};
+ t.gen=()=>{const q=generator();q.plainLanguage=17;q.contentVersion=40;q.moneyRelease50=50;return cleanQuestion(q);};
+ UPDATED50.push(id);
+}
+updateMoney50('3-payday','מהמשכורת לתקציב Pepper',['money-divide','money-product'],()=>{
+ const p=pepperPlan50(salary50()),monthly=P([false,true]);
+ if(!monthly)return numeric(`המשכורת החודש ${p.salary} ₪. לפי התוכנית מחלקים את המשכורת ב־100 ומעבירים את התוצאה ל־Pepper בכל יום. כמה יועבר ביום?`,p.daily,
+  `המשכורת: ${p.salary} ₪.\nמחלקים ב־100:\n${p.salary} ÷ 100 = ${p.daily} ₪ ביום.`,
+  {step:10,nudge:pepperNudge50,meta:{money50:{kind:'pepper-daily',...p}}});
+ return numeric(`המשכורת ${p.salary} ₪, ולכן ל־Pepper נכנסים ${p.daily} ₪ ביום. בחודש הזה 30 ימים. כמה יועבר לכרטיס בכל החודש?`,p.monthly,
+  `ההפקדה היומית: ${p.salary} ÷ 100 = ${p.daily} ₪.\nב־30 ימים:\n${p.daily} × 30 = ${p.monthly} ₪.`,
+  {step:100,nudge:pepperNudge50,meta:{money50:{kind:'pepper-month',...p}}});
+},'משכורת 5,000–8,000 בקפיצות של 100; שני ענפים: הפקדה יומית או סכום ב־30 ימים.');
+updateMoney50('3-v30-avgday','הוצאה יומית מול התוכנית שלך',['money-average-difference'],()=>{
+ const p=pepperPlan50(salary50()),extra=P([5,10,15,20]),spent=7*(p.daily+extra);
+ return numeric(`המשכורת ${p.salary} ₪, וההפקדה ל־Pepper היא ${p.daily} ₪ ביום. במשך 7 ימים הוצאת ${spent} ₪. בכמה ההוצאה הממוצעת ליום גבוהה מההפקדה היומית?`,extra,
+  `ליום: ${spent} ÷ 7 = ${p.daily+extra} ₪.\nההפקדה היומית: ${p.daily} ₪.\n${p.daily+extra} − ${p.daily} = ${extra} ₪ יותר ביום.`,
+  {step:5,nudge:'אם מוציאה יותר ממה שנכנס, היתרה מצטמצמת. בודקת אילו פינוקים אפשר לדחות.',meta:{money50:{kind:'pepper-average',...p,extra,spent}}});
+},'משכורת 5,000–8,000; הוצאה יומית גבוהה ב־5, 10, 15 או 20; סיכום של 7 ימים.');
+updateMoney50('3-v30-savefirst','Pepper וחיסכון באותה תוכנית',['money-percent-reserve'],()=>{
+ const p=pepperPlan50(salary50()),saved=p.salary/10,left=p.salary-saved-p.monthly;
+ return numeric(`המשכורת ${p.salary} ₪. את שומרת 10% לחיסכון. ל־Pepper יועברו ${p.daily} ₪ ביום, שהם ${p.monthly} ₪ ב־30 ימים. כמה מהמשכורת נשאר לשאר ההוצאות?`,left,
+  `לחיסכון: ${p.salary} ÷ 10 = ${saved} ₪.\nאחרי החיסכון: ${p.salary} − ${saved} = ${p.salary-saved} ₪.\nאחרי Pepper: ${p.salary-saved} − ${p.monthly} = ${left} ₪.`,
+  {step:100,nudge:'מחלקת את המשכורת מראש: הוצאות חיוניות, חיסכון ופינוקים. כל חלק הוא כסף שכבר יש, ולא הלוואה.',meta:{money50:{kind:'pepper-saving',...p,saved,left}}});
+},'משכורת 5,000–8,000; חיסכון 10%; Pepper לפי הכלל ב־30 ימים.');
+updateMoney50('3-v30-weeksleft','מחלקת את התקציב שנשאר',['money-difference-divide'],()=>{
+ const p=pepperPlan50(salary50()),spent=P([300,450,540,600,630]),left=p.monthly-spent;
+ return numeric(`המשכורת ${p.salary} ₪: ${p.daily} ₪ ביום ל־Pepper, וב־30 ימים ${p.monthly} ₪. כבר הוצאת ${spent} ₪. את מחלקת את מה שנשאר לשלושה חלקים שווים להמשך החודש. כמה בכל חלק?`,left/3,
+  `תקציב החודש: ${p.daily} × 30 = ${p.monthly} ₪.\nנשאר: ${p.monthly} − ${spent} = ${left} ₪.\nלכל חלק: ${left} ÷ 3 = ${left/3} ₪.`,
+  {step:30,nudge:'זו חלוקה של תקציב החודש. קונה רק כשיש יתרה מספיקה בכרטיס בפועל.',meta:{money50:{kind:'pepper-share',...p,spent,left}}});
+},'משכורת 5,000–8,000; כבר יצאו 300, 450, 540, 600 או 630; מחלקים את היתרה לשלושה, תמיד בלי שבר.');
+updateMoney50('3-v30-daysx','ההפקדות בין שני תאריכים',['date-inclusive-product'],()=>{
+ const p=pepperPlan50(salary50()),start=R(1,12),end=start+R(4,15),days=end-start+1;
+ return numeric(`המשכורת ${p.salary} ₪, ולכן ל־Pepper נכנסים ${p.daily} ₪ בכל יום. כמה יועבר מה־${start} עד ה־${end} בחודש, כולל שני הימים?`,days*p.daily,
+  `מספר הימים: ${end} − ${start} + 1 = ${days}.\nכוללים גם את היום הראשון והאחרון.\n${days} × ${p.daily} = ${days*p.daily} ₪.`,
+  {step:p.daily,nudge:'ההפקדות הקטנות מצטברות. בודקת את היתרה שכבר נכנסה לפני קנייה.',meta:{money50:{kind:'pepper-dates',...p,start,end,depositDays:days}}});
+},'משכורת 5,000–8,000; תחילה בימים 1–12; סיום 4–15 ימים אחר כך; כולל שני הקצוות.');
+updateMoney50('3-v40-pepper-plan','מהתקציב החודשי לפינוקים שתכננת',['money-product-difference'],()=>{
+ const p=pepperPlan50(salary50()),reserved=P([300,400,500]),left=p.monthly-reserved;
+ return numeric(`המשכורת ${p.salary} ₪, ולכן יועברו ל־Pepper ${p.daily} ₪ ביום. בחודש הזה 30 ימים, בלי תוספת מיוחדת. את שומרת ${reserved} ₪ לעיסוי. כמה מתקציב החודש נשאר לשאר הפינוקים?`,left,
+  `לכל החודש: ${p.daily} × 30 = ${p.monthly} ₪.\nשומרת לעיסוי: ${reserved} ₪.\nלשאר הפינוקים: ${p.monthly} − ${reserved} = ${left} ₪.`,
+  {step:100,nudge:'התקציב לחודש כולל את העיסוי. קובעת אותו אחרי שיש בכרטיס מספיק כסף ששמור לכך.',meta:{money50:{kind:'pepper-reserved',...p,reserved,left}}});
+},'משכורת 5,000–8,000; 30 ימים; עיסוי מתוכנן 300, 400 או 500; אין תוספת אוטומטית מעבר לכלל.');
+updateMoney50('3-v30-overdraft','מה היתרה אחרי כניסת המשכורת',['money-difference','money-sum'],()=>{
+ const salary=salary50(),opening=P([-4000,-3000,-2000,-1500,0,500,1000,1500]),balance=salary+opening;
+ const intro=opening<0?`בחשבון יש מינוס ${-opening} ₪.`:opening===0?'היתרה בחשבון היא 0 ₪.':`בחשבון כבר יש ${opening} ₪, בלי מינוס.`;
+ const calc=opening<0?`קודם מכסים את המינוס: ${-opening} ₪.\n${salary} − ${-opening} = ${balance} ₪ ביתרה.`:
+  `היתרה לפני המשכורת: ${opening} ₪.\nנכנסת משכורת: ${salary} ₪.\n${opening} + ${salary} = ${balance} ₪ ביתרה.`;
+ return numeric(`${intro} נכנסה משכורת של ${salary} ₪. מה היתרה עכשיו, לפני חיובים נוספים?`,balance,calc,
+  {step:500,nudge:opening<0?'חלק מהמשכורת סוגר את החוב. מתכננת את החודש לפי מה שנשאר, בלי להגדיל את המינוס.':'יתרה חיובית נותנת מקום לתכנון. שומרת כסף לחשבונות ולחיסכון לפני הפינוקים.',meta:{money50:{kind:'salary-balance',salary,opening,balance}}});
+},'משכורת 5,000–8,000 בקפיצות 100; יתרה לפני המשכורת: מינוס 4,000 / 3,000 / 2,000 / 1,500, אפס, או פלוס 500 / 1,000 / 1,500.');
+updateMoney50('3-v47-payday-after-commitments','מה נשאר אחרי התשלומים המתוכננים',['money-difference'],()=>{
+ const salary=salary50(),commit=salary-P([2500,3000,3500]),reserve=P([500,800,1000]),left=salary-commit-reserve;
+ return numeric(`נכנסה משכורת של ${salary} ₪. התשלומים החיוניים הם ${commit} ₪, ואת שומרת עוד ${reserve} ₪ לחיסכון. כמה נשאר לשאר ההוצאות החודש?`,left,
+  `אחרי התשלומים: ${salary} − ${commit} = ${salary-commit} ₪.\nאחרי החיסכון: ${salary-commit} − ${reserve} = ${left} ₪.`,
+  {step:100,nudge:'מה שנשאר כולל גם הוצאות מתוכננות אחרות. הפקדה ל־Pepper באה מאותה משכורת ואינה כסף נוסף.',meta:{money50:{kind:'salary-commitments',salary,commit,reserve,left}}});
+},'משכורת 5,000–8,000; אחרי חיובים חיוניים נשארים 2,500, 3,000 או 3,500; עוד 500, 800 או 1,000 מיועדים לחיסכון.');
+updateMoney50('3-v46-rounded-income','משכורת והחזר: מחשבת בערך',['money-round-sum'],()=>{
+ const salary=P([5198,5298,5899,6798,7299,7798,7998]),refund=P([149,249,349]),sr=Math.round(salary/10)*10,rr=Math.round(refund/10)*10;
+ return numeric(`נכנסה משכורת של ${salary} ₪ ועוד החזר קנייה של ${refund} ₪. עגלי כל סכום למספר הקרוב ביותר שמסתיים ב־0. בערך כמה נכנס יחד?`,sr+rr,
+  `משכורת: ${salary} מעגלים ל־${sr} ₪.\nהחזר קנייה: ${refund} מעגלים ל־${rr} ₪.\n${sr} + ${rr} = ${sr+rr} ₪ בערך.`,
+  {fmt:x=>'כ־'+cash(x),step:100,nudge:'משכורת והחזר הם שני מקורות שונים. לפני הוצאה בודקת מה כבר שמור לתשלומים.',meta:{money50:{kind:'salary-rounded',salary,refund,salaryRounded:sr,refundRounded:rr}}});
+},'משכורת: 5,198 / 5,298 / 5,899 / 6,798 / 7,299 / 7,798 / 7,998. החזר: 149 / 249 / 349. שני הסכומים דורשים עיגול בפועל.');
+assertUniqueCapacity49(ACTIVE);
+function refreshMoneyQuestion50(q){
+ if(!q||q.answered||q.moneyRelease50===50||!UPDATED50.includes(q.tpl))return q;
+ const t=ACTIVE.find(t=>t.id===q.tpl),fresh=t.gen();
+ for(const key of ['tpl','cat','level','courseLevel40','teachingBand33','selectionKind','selectionMode'])if(q[key]!==undefined)fresh[key]=q[key];
+ Object.assign(fresh,{title:plainText(t.title),practicePattern:t.practicePattern,answered:false,chosen:null});
+ return fresh;
+}
+
 // QUESTION ORIGINALITY CONTRACT — numbers, names and story wording are NOT IDs.
 // SOLUTION_TYPES46 is a hand-reviewed taxonomy of required calculation/decision
 // steps. Same solution type = a learning repetition, not necessarily identical
@@ -7424,19 +7514,19 @@ const QUESTION_CATALOG46=ACTIVE.map(t=>({id:t.id,topic:TOPICS[t.cat].name,cat:t.
  repeatedOverall:t.solutionTypes46.some(key=>QUESTION_DUPLICATES46[key].count>1),
  repeatedInTopic:t.solutionTypes46.some(key=>QUESTION_DUPLICATES46[key].byTopic[t.cat].count>1),
  repeatedInTopicLevel:t.solutionTypes46.some(key=>QUESTION_DUPLICATES46[key].byTopic[t.cat].levels[t.rank].count>1),
- storyVariants49:t.variants49||[],previousCourseLevel49:LEVEL_CHANGES49.find(x=>x.id===t.id)?.from??t.rank+1,variationPolicy:'Names, numbers and rephrasing do not create an original question.'}));
+ moneyRule50:t.moneyRule50||null,storyVariants49:t.variants49||[],previousCourseLevel49:LEVEL_CHANGES49.find(x=>x.id===t.id)?.from??t.rank+1,variationPolicy:'Names, numbers and rephrasing do not create an original question.'}));
 const QUESTION_COUNTS46=TOPICS.map((topic,cat)=>({topic:topic.name,cat,
  total:ACTIVE.filter(t=>t.cat===cat).length,
  uniqueTypes:new Set(ACTIVE.filter(t=>t.cat===cat).flatMap(t=>t.solutionTypes46)).size,
  levels:[0,1,2,3].map(rank=>{const ts=levelFamilies40(cat,rank);return{level:rank+1,families:ts.length,
   uniqueTypes:new Set(ts.flatMap(t=>t.solutionTypes46)).size,
   repeatedFamilies:QUESTION_CATALOG46.filter(t=>t.cat===cat&&t.level===rank+1&&t.repeatedInTopicLevel).length};})}));
-function getQuestionInventory46(){return JSON.parse(JSON.stringify({version:49,uniqueCapacity:{maxPerTopicLevel:MAX_UNIQUE_TYPES49,unit:"calculation-or-decision-type",enforced:true},levelChanges49:LEVEL_CHANGES49,newStoryVariants49:SHOPPING_VARIANTS49.map(({generate,...meta})=>meta),progression:{passScores:[...PASS_SCORES48],fixedLevels:[1,2,3],familiesPerFixedLevel:20,level4Minimum:20,level4Maximum:null,level4MaximumUniqueTypes:MAX_UNIQUE_TYPES49,fullCoverageRequired:true},totalFamilies:ACTIVE.length,totalSolutionTypes:Object.keys(QUESTION_DUPLICATES46).length,
+function getQuestionInventory46(){return JSON.parse(JSON.stringify({version:50,moneyRules50:MONEY_RULES50,updatedMoneyFamilies50:UPDATED50,uniqueCapacity:{maxPerTopicLevel:MAX_UNIQUE_TYPES49,unit:"calculation-or-decision-type",enforced:true},levelChanges49:LEVEL_CHANGES49,newStoryVariants49:SHOPPING_VARIANTS49.map(({generate,...meta})=>meta),progression:{passScores:[...PASS_SCORES48],fixedLevels:[1,2,3],familiesPerFixedLevel:20,level4Minimum:20,level4Maximum:null,level4MaximumUniqueTypes:MAX_UNIQUE_TYPES49,fullCoverageRequired:true},totalFamilies:ACTIVE.length,totalSolutionTypes:Object.keys(QUESTION_DUPLICATES46).length,
  definition:'Equal calculation/decision steps with the same kind of quantities; random numbers/names are not originals.',
  counts:QUESTION_COUNTS46,groups:QUESTION_DUPLICATES46,questions:QUESTION_CATALOG46,restored:HISTORICAL_RESTORE46}));}
 function exportQuestionInventory46(){
  const blob=new Blob([JSON.stringify(getQuestionInventory46(),null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');
- a.href=url;a.download='Math_Life_Question_Inventory_v49.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+ a.href=url;a.download='Math_Life_Question_Inventory_v50.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
 HELP[0].body='בכל נושא שלוש רמות. המאגר גדל בלי למחוק שאלות קודמות. לכל נושא ולמשחק הכללי בחירת רמה נפרדת. הכיסוי מציג כמה משפחות ניסית מתוך הכמות המעודכנת ברמה. המספר משתנה בין הנושאים והרמות.';
 HELP[1].body='היעדים: 70 ברמה 1, 80 ברמה 2 ו־90 להשלמת רמה 3. לפתיחת רמה חדשה צריך גם לענות על כל המשפחות ברמה הקודמת. טעות נחשבת לכיסוי. רמה שנפתחה כדין לפני הרחבת המאגר נשארת פתוחה; השאלות החדשות עדיין ממתינות לך.';
@@ -7459,6 +7549,10 @@ HELP[8].body='כל הניקוד והלבבות נשמרים. שש משפחות �
 // Insert before the final audit/help page: keep its export button placement.
 HELP.splice(HELP.length-1,0,{title:'קנייה בנחת מתחילה לפני היציאה',body:'אוכלת לפני קניית אוכל, בודקת מה כבר יש בבית ויוצאת עם רשימה. כשאני עייפה או מתקשה להתרכז, קנייה גדולה ולא דחופה יכולה לחכות למנוחה. אם משהו חיוני, קונה רק אותו או מבקשת עזרה. בקופה מותר לעצור ולבדוק.'});
 if(typeof window!=='undefined'){window.getQuestionInventory48=getQuestionInventory46;window.getQuestionInventory49=getQuestionInventory46;}
+
+HELP.splice(HELP.length-1,0,{title:'Pepper לפי המשכורת',body:'בתוכנית שלך מחלקים את המשכורת ב־100. משכורת 5,000 ₪ נותנת 50 ₪ ביום; 5,300 נותנת 53; 6,000 נותנת 60; ו־8,000 נותנת 80. ב־30 ימים אלה 1,500, 1,590, 1,800 ו־2,400 ₪. תמיד מחשבים לפי מספר הימים שכתוב בשאלה, בלי תוספת אוטומטית. זה חלק מהמשכורת, לא כסף נוסף.'});
+HELP.splice(HELP.length-1,0,{title:'משכורת ויתרה בבנק',body:'בשאלות המשכורת החודשית היא 5,000–8,000 ₪. לפעמים היא מכסה מינוס ולפעמים מצטרפת ליתרה חיובית. למשל, משכורת 6,000 ₪ אחרי מינוס 3,000 משאירה 3,000 ₪; אותה משכורת כשכבר יש 1,500 משאירה 7,500 ₪, לפני חיובים אחרים. תוספת על כמה שעות עבודה היא סכום נפרד מהמשכורת המלאה.'});
+if(typeof window!=='undefined')window.getQuestionInventory50=getQuestionInventory46;
 if(typeof document!=='undefined')init();
 </script>
 </body>
