@@ -176,7 +176,7 @@ bdi.number-run{direction:ltr;unicode-bidi:isolate}
  <div class="intro"><strong>בקצב שלך</strong><label class="size-label" for="lengthPicker">אורך המשחק <select id="lengthPicker" aria-label="מספר השאלות במשחק"><option value="10">10 שאלות</option><option value="20">20 שאלות</option><option value="25">25 שאלות</option><option value="30">30 שאלות</option><option value="40">40 שאלות</option><option value="50">50 שאלות</option></select></label></div>
  <button id="resume" class="resume" hidden></button>
  <div id="modes" class="modes"></div>
- <div class="section-label"><strong>או בחרי משהו מהחיים</strong><span>עד 20 בנושא · עד 50 בכללי</span></div>
+ <div class="section-label"><strong>או בחרי משהו מהחיים</strong><span>עד 50 שאלות במשחק</span></div>
  <div id="topics" class="topics"></div>
  <div class="stats"><div><b id="today">0</b><span>ענית היום</span></div><div><b id="all">0</b><span>ענית עד עכשיו</span></div><div><b id="best">0</b><span>רצף השיא שלך</span></div></div>
  <p id="storageStatus" class="home-foot">ההתקדמות נשמרת במכשיר הזה</p>
@@ -4295,6 +4295,7 @@ function calculatorKeyboard(event){
 
 // Explain the existing answer without changing it, and keep every operation on its own line.
 function explanationSteps(q){
+ if(q.investment51)return String(q.calc||'').split(/\n+/).map(s=>s.trim()).filter(Boolean);
  let text=String(q.calc||'');
  text=text.replace(/10% הם ([\d,]+(?:\.\d+)?) ₪/g,(whole,n)=>`10% הם עשירית: מחלקים את הסכום ב־10.\n${Number(n.replace(/,/g,''))*10} ÷ 10 = ${n} ₪`);
  text=text.replace(/,\s+(?=\d+(?:\.\d+)? מעגלים)/g,'\n');
@@ -4452,7 +4453,7 @@ const HELP=[
  {title:'הקו והלבבות',body:'הקו מתמלא כשניסית סוג שאלה חדש, גם אם טעית. יש 300 סוגים פעילים, 50 בכל נושא. הלבבות מראים הצלחה באותו סוג: תשובה נכונה מוסיפה לב, וטעות מורידה לב, עד חמישה. הם אינם משנים את הציון.'}
 ];
 
-function renderHelp(){$('bankSize48').textContent=ACTIVE.length+' משפחות · עד 20 דרכי פתרון בנושא וברמה · גרסה 50';const catalog=helpPage===HELP.length-1;$('exportBtn').textContent=catalog?'מיפוי שאלות ↓':'שמירת גיבוי ↓';$('exportBtn').onclick=catalog?exportQuestionInventory46:exportProgress;const p=HELP[helpPage];setRich('helpTitle',p.title);setRich('helpBody',p.body);$('helpPage').textContent=`${helpPage+1} / ${HELP.length}`;$('helpPrev').disabled=helpPage===0;$('helpNext').textContent=helpPage===HELP.length-1?'בחזרה למשחק':'המשך ←';show('help');}
+function renderHelp(){$('bankSize48').textContent=ACTIVE.length+' משפחות · עד 20 דרכי פתרון בנושא וברמה · גרסה 51';const catalog=helpPage===HELP.length-1;$('exportBtn').textContent=catalog?'מיפוי שאלות ↓':'שמירת גיבוי ↓';$('exportBtn').onclick=catalog?exportQuestionInventory46:exportProgress;const p=HELP[helpPage];setRich('helpTitle',p.title);setRich('helpBody',p.body);$('helpPage').textContent=`${helpPage+1} / ${HELP.length}`;$('helpPrev').disabled=helpPage===0;$('helpNext').textContent=helpPage===HELP.length-1?'בחזרה למשחק':'המשך ←';show('help');}
 function init(){
  load();renderHome();$('lengthPicker').onchange=e=>{const v=+e.target.value;if(SIZES.includes(v)){state.settings.length=v;save();}};
  
@@ -7322,6 +7323,104 @@ function addLevel4Question48({id,cat,title,types,typeLabels={},generator}){
  BANK.push(t);ACTIVE.push(t);LEVEL_ASSIGNMENTS47[cat][3].push(id);return t;
 }
 // LEVEL4_EXTENSION_POINT48 — additions must satisfy MAX_UNIQUE_TYPES49; never replace originals.
+// V51: additive level-4 investment questions. Preserve all previous IDs and Q.
+// 3 families, not a new family for each random amount, asset name or rate.
+// The simple percentage repeats a known skill explicitly. Split returns and
+// percentage-to-monthly-average add new calculation sequences; rounding is
+// separately tagged in the audited taxonomy, never disguised as new wording.
+const INVESTMENT_RULES51=Object.freeze({
+ level:4,cat:3,beforeTaxAndCosts:true,yearMonths:12,
+ goldPrincipals:[10000,20000,30000],goldRates:[10,20,30],
+ goldApproxPrincipals:[9800,10200,19800,20200,29800,30200],
+ splitPrincipals:[40000,60000,100000],splitGoldRates:[20,30],splitStockRates:[10,20],
+ monthlyPrincipals:[20000,50000,100000],monthlyRates:[6,12,24],
+ monthlyApproxPrincipals:[19800,20200,49800,50200,99800,100200],
+ monthlyApproxRates:[12,24],roundTo:1000,
+ exactAndApproxProbability:[1,1],
+ definition:'Hypothetical annual gains; arithmetic monthly average is not a promised monthly payment.'
+});
+const INVESTMENT_NOTE51='נתוני דוגמה בלבד, לפני מס ועלויות. אין כאן הבטחה לרווח.';
+const investmentCash51=(n,approx=false)=>(approx?'כ־':'')+n37(n)+' ₪';
+function investmentQuestion51(text,answer,calc,data,opt={}){
+ return numeric(text,answer,calc,{
+  fmt:n=>investmentCash51(n,data.approx),step:opt.step||100,
+  note:INVESTMENT_NOTE51,...opt,
+  meta:{investment51:{...data,expected:answer},contentVersion:40,plainLanguage:17}
+ });
+}
+function goldProfit51(principal,rate,approx=false){
+ const base=approx?Math.round(principal/1000)*1000:principal;
+ const tenth=base/10,profit=tenth*(rate/10);
+ const text=`השקעת ${n37(principal)} ₪ בזהב. בשנה הזו הרווח היה ${rate}%. `+
+  (approx?`לחשבון בערך, עגלי את סכום ההשקעה לאלף הקרוב. כמה הרווח לפי הסכום המעוגל?`:'כמה הרווח בשקלים, בלי סכום ההשקעה עצמו?');
+ const calc=[
+  ...(approx?[`מעגלים ${n37(principal)} ל־${n37(base)} ₪.`]:[]),
+  `עשירית מההשקעה היא 10%: ${n37(base)} ÷ 10 = ${n37(tenth)} ₪.`,
+  ...(rate===10?[]:[`${rate}% הם ${rate/10} פעמים עשירית: ${n37(tenth)} × ${rate/10} = ${n37(profit)} ₪.`]),
+  `הרווח ${approx?'בערך ':''}הוא ${n37(profit)} ₪; לא מוסיפים אליו את סכום ההשקעה.`
+ ].join('\n');
+ return investmentQuestion51(text,profit,calc,{kind:'gold-profit',principal,rate,approx,base},
+  {step:1000,wrong:[base+profit,profit*2,profit/2],nudge:'מפרידה בין הכסף שהשקעת לבין הרווח שנוסף.'});
+}
+function splitProfit51(principal,goldRate,stockRate){
+ const half=principal/2,tenth=half/10,goldProfit=tenth*(goldRate/10),stockProfit=tenth*(stockRate/10);
+ return investmentQuestion51(
+  `השקעת ${n37(principal)} ₪: חצי בזהב וחצי במניות. בשנה הזו הזהב הרוויח ${goldRate}% והמניות ${stockRate}%. כמה הרווח משתי ההשקעות יחד?`,
+  goldProfit+stockProfit,
+  `בכל חלק: ${n37(principal)} ÷ 2 = ${n37(half)} ₪.\n`+
+  `10% מכל חלק: ${n37(half)} ÷ 10 = ${n37(tenth)} ₪.\n`+
+  `הרווח בזהב: ${n37(tenth)} × ${goldRate/10} = ${n37(goldProfit)} ₪.\n`+
+  `הרווח במניות: ${n37(tenth)} × ${stockRate/10} = ${n37(stockProfit)} ₪.\n`+
+  `יחד: ${n37(goldProfit)} + ${n37(stockProfit)} = ${n37(goldProfit+stockProfit)} ₪.`,
+  {kind:'split-profit',principal,goldRate,stockRate,approx:false,half,goldProfit,stockProfit},
+  {step:1000,wrong:[(goldProfit+stockProfit)*2,goldProfit,stockProfit],
+   nudge:'כל אחוז מחושב מהחלק שהושקע באותו מקום, ולא מכל הכסף.'});
+}
+function monthlyProfit51(principal,rate,approx=false){
+ const base=approx?Math.round(principal/1000)*1000:principal;
+ const one=base/100,annual=one*rate,monthly=annual/12;
+ return investmentQuestion51(
+  `השקעת ${n37(principal)} ₪. הרווח בשנה הזו היה ${rate}%. `+
+  (approx?'עגלי את סכום ההשקעה לאלף הקרוב. ':'')+
+  `כמה ${approx?'בערך ':''}הרווח לחודש בממוצע, אם מחלקים את הרווח השנתי ל־12?`,
+  monthly,
+  [
+   ...(approx?[`מעגלים ${n37(principal)} ל־${n37(base)} ₪.`]:[]),
+   `אחוז אחד: ${n37(base)} ÷ 100 = ${n37(one)} ₪.`,
+   `הרווח לשנה${approx?' בערך':''}: ${n37(one)} × ${rate} = ${n37(annual)} ₪.`,
+   `ממוצע לחודש: ${n37(annual)} ÷ 12 = ${n37(monthly)} ₪.`
+  ].join('\n'),
+  {kind:'monthly-profit',principal,rate,approx,base,annual,months:12},
+  {step:100,wrong:[annual,monthly*2,monthly/2],
+   nudge:'זה ממוצע בלבד, לא תשלום חודשי קבוע. בחודש מסוים אפשר גם להפסיד.'});
+}
+const NEW_INVESTMENTS51=[
+ {id:'3-v51-gold-profit',title:'רווח בזהב: מאחוזים לשקלים',
+  types:['money-percent-part','money-round-percent'],
+  typeLabels:{'money-round-percent':'עיגול סכום כסף ואז חישוב חלק ממנו באחוזים'},
+  randomness:{branches:['exact','rounded-principal'],equalBranchWeights:true,
+   principal:[...INVESTMENT_RULES51.goldPrincipals],approxPrincipal:[...INVESTMENT_RULES51.goldApproxPrincipals],
+   rate:[...INVESTMENT_RULES51.goldRates],roundTo:1000},
+  generator(){const approx=Math.random()<.5;return goldProfit51(P(approx?INVESTMENT_RULES51.goldApproxPrincipals:INVESTMENT_RULES51.goldPrincipals),P(INVESTMENT_RULES51.goldRates),approx);}},
+ {id:'3-v51-split-profit',title:'חצי בזהב וחצי במניות: מחברת רווחים',
+  types:['money-half-two-percent-sum'],
+  typeLabels:{'money-half-two-percent-sum':'חלוקת השקעה לשני חצאים, אחוז רווח שונה לכל חצי וחיבור הרווחים'},
+  randomness:{principal:[...INVESTMENT_RULES51.splitPrincipals],goldRate:[...INVESTMENT_RULES51.splitGoldRates],stockRate:[...INVESTMENT_RULES51.splitStockRates],equalRatesAllowed:false},
+  generator(){const p=P(INVESTMENT_RULES51.splitPrincipals),g=P(INVESTMENT_RULES51.splitGoldRates),s=P(INVESTMENT_RULES51.splitStockRates.filter(n=>n!==g));return splitProfit51(p,g,s);}},
+ {id:'3-v51-monthly-profit',title:'רווח של שנה: כמה זה בממוצע לחודש',
+  types:['money-percent-monthly-average','money-round-percent-monthly-average'],
+  typeLabels:{'money-percent-monthly-average':'חישוב רווח שנתי באחוזים וחלוקתו ל־12 חודשים',
+   'money-round-percent-monthly-average':'עיגול סכום ההשקעה, חישוב רווח שנתי באחוזים וחלוקתו ל־12'},
+  randomness:{branches:['exact','rounded-principal'],equalBranchWeights:true,
+   principal:[...INVESTMENT_RULES51.monthlyPrincipals],approxPrincipal:[...INVESTMENT_RULES51.monthlyApproxPrincipals],
+   rate:[...INVESTMENT_RULES51.monthlyRates],approxRate:[...INVESTMENT_RULES51.monthlyApproxRates],roundTo:1000,months:12},
+  generator(){const approx=Math.random()<.5;return monthlyProfit51(P(approx?INVESTMENT_RULES51.monthlyApproxPrincipals:INVESTMENT_RULES51.monthlyPrincipals),P(approx?INVESTMENT_RULES51.monthlyApproxRates:INVESTMENT_RULES51.monthlyRates),approx);}}
+];
+for(const spec of NEW_INVESTMENTS51){
+ const t=addLevel4Question48({cat:3,...spec});
+ t.release51=true;t.investmentRule51={version:51,randomness:spec.randomness};
+}
+
 const allocated47=new Set();
 for(let cat=0;cat<6;cat++)for(let rank=0;rank<4;rank++){
  const ids=LEVEL_ASSIGNMENTS47[cat][rank];if(rank<3?ids.length!==20:ids.length<20)throw Error('Levels 1-3 require 20; level 4 requires at least 20');
@@ -7507,26 +7606,26 @@ const QUESTION_DUPLICATES46=Object.fromEntries([...new Set(ACTIVE.flatMap(t=>t.s
    levels:[0,1,2,3].map(rank=>({level:rank+1,count:rows.filter(t=>t.cat===cat&&t.rank===rank).length,ids:rows.filter(t=>t.cat===cat&&t.rank===rank).map(t=>t.id)}))}))}];
 }));
 const QUESTION_CATALOG46=ACTIVE.map(t=>({id:t.id,topic:TOPICS[t.cat].name,cat:t.cat,level:t.rank+1,title:t.title,
- previousLevel:t.previousLevel47??null,generatorLevel:t.generatorLevel47??t.rank,originalFrom:t.restoredFrom||[],status:t.release48?'new48':t.release47?'new47':t.release46?(t.restoredFrom.length?'restored':'new'):'preserved',
+ previousLevel:t.previousLevel47??null,generatorLevel:t.generatorLevel47??t.rank,originalFrom:t.restoredFrom||[],status:t.release51?'new51':t.release48?'new48':t.release47?'new47':t.release46?(t.restoredFrom.length?'restored':'new'):'preserved',
  types:t.solutionTypes46.map(key=>{const g=QUESTION_DUPLICATES46[key],area=g.byTopic[t.cat],level=area.levels[t.rank];return{
   key,description:g.description,countOverall:g.count,countInTopic:area.count,countInTopicLevel:level.count,
   idsOverall:g.ids,idsInTopicLevel:level.ids};}),
  repeatedOverall:t.solutionTypes46.some(key=>QUESTION_DUPLICATES46[key].count>1),
  repeatedInTopic:t.solutionTypes46.some(key=>QUESTION_DUPLICATES46[key].byTopic[t.cat].count>1),
  repeatedInTopicLevel:t.solutionTypes46.some(key=>QUESTION_DUPLICATES46[key].byTopic[t.cat].levels[t.rank].count>1),
- moneyRule50:t.moneyRule50||null,storyVariants49:t.variants49||[],previousCourseLevel49:LEVEL_CHANGES49.find(x=>x.id===t.id)?.from??t.rank+1,variationPolicy:'Names, numbers and rephrasing do not create an original question.'}));
+ investmentRule51:t.investmentRule51||null,moneyRule50:t.moneyRule50||null,storyVariants49:t.variants49||[],previousCourseLevel49:LEVEL_CHANGES49.find(x=>x.id===t.id)?.from??t.rank+1,variationPolicy:'Names, numbers and rephrasing do not create an original question.'}));
 const QUESTION_COUNTS46=TOPICS.map((topic,cat)=>({topic:topic.name,cat,
  total:ACTIVE.filter(t=>t.cat===cat).length,
  uniqueTypes:new Set(ACTIVE.filter(t=>t.cat===cat).flatMap(t=>t.solutionTypes46)).size,
  levels:[0,1,2,3].map(rank=>{const ts=levelFamilies40(cat,rank);return{level:rank+1,families:ts.length,
   uniqueTypes:new Set(ts.flatMap(t=>t.solutionTypes46)).size,
   repeatedFamilies:QUESTION_CATALOG46.filter(t=>t.cat===cat&&t.level===rank+1&&t.repeatedInTopicLevel).length};})}));
-function getQuestionInventory46(){return JSON.parse(JSON.stringify({version:50,moneyRules50:MONEY_RULES50,updatedMoneyFamilies50:UPDATED50,uniqueCapacity:{maxPerTopicLevel:MAX_UNIQUE_TYPES49,unit:"calculation-or-decision-type",enforced:true},levelChanges49:LEVEL_CHANGES49,newStoryVariants49:SHOPPING_VARIANTS49.map(({generate,...meta})=>meta),progression:{passScores:[...PASS_SCORES48],fixedLevels:[1,2,3],familiesPerFixedLevel:20,level4Minimum:20,level4Maximum:null,level4MaximumUniqueTypes:MAX_UNIQUE_TYPES49,fullCoverageRequired:true},totalFamilies:ACTIVE.length,totalSolutionTypes:Object.keys(QUESTION_DUPLICATES46).length,
+function getQuestionInventory46(){return JSON.parse(JSON.stringify({version:51,investmentRules51:INVESTMENT_RULES51,newInvestmentFamilies51:NEW_INVESTMENTS51.map(({generator,...meta})=>meta),moneyRules50:MONEY_RULES50,updatedMoneyFamilies50:UPDATED50,uniqueCapacity:{maxPerTopicLevel:MAX_UNIQUE_TYPES49,unit:"calculation-or-decision-type",enforced:true},levelChanges49:LEVEL_CHANGES49,newStoryVariants49:SHOPPING_VARIANTS49.map(({generate,...meta})=>meta),progression:{passScores:[...PASS_SCORES48],fixedLevels:[1,2,3],familiesPerFixedLevel:20,level4Minimum:20,level4Maximum:null,level4MaximumUniqueTypes:MAX_UNIQUE_TYPES49,fullCoverageRequired:true},totalFamilies:ACTIVE.length,totalSolutionTypes:Object.keys(QUESTION_DUPLICATES46).length,
  definition:'Equal calculation/decision steps with the same kind of quantities; random numbers/names are not originals.',
  counts:QUESTION_COUNTS46,groups:QUESTION_DUPLICATES46,questions:QUESTION_CATALOG46,restored:HISTORICAL_RESTORE46}));}
 function exportQuestionInventory46(){
  const blob=new Blob([JSON.stringify(getQuestionInventory46(),null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');
- a.href=url;a.download='Math_Life_Question_Inventory_v50.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+ a.href=url;a.download='Math_Life_Question_Inventory_v51.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
 HELP[0].body='בכל נושא שלוש רמות. המאגר גדל בלי למחוק שאלות קודמות. לכל נושא ולמשחק הכללי בחירת רמה נפרדת. הכיסוי מציג כמה משפחות ניסית מתוך הכמות המעודכנת ברמה. המספר משתנה בין הנושאים והרמות.';
 HELP[1].body='היעדים: 70 ברמה 1, 80 ברמה 2 ו־90 להשלמת רמה 3. לפתיחת רמה חדשה צריך גם לענות על כל המשפחות ברמה הקודמת. טעות נחשבת לכיסוי. רמה שנפתחה כדין לפני הרחבת המאגר נשארת פתוחה; השאלות החדשות עדיין ממתינות לך.';
@@ -7541,7 +7640,7 @@ if(typeof window!=='undefined')window.getQuestionInventory46=getQuestionInventor
 
 
 
-HELP[0]={title:'ארבע רמות, בקצב שלך',body:'בכל נושא וברמה יש עד 20 דרכי פתרון שונות. שינוי שם או מספר אינו שאלה ייחודית נוספת. כרגע יש 20 משפחות שאלות בכל רמה בנושא, וגם סיפורים שונים לאותו חישוב. ארבעת ציוני הרמות גלויים, ואת בוחרת ברמה פתוחה.'};
+HELP[0]={title:'ארבע רמות, בקצב שלך',body:'בכל נושא וברמה יש עד 20 דרכי פתרון שונות. שינוי שם או מספר אינו שאלה ייחודית נוספת. ברמות 1–3 יש 20 משפחות בנושא. ברמה 4 יש 23 בכסף ולקוחות ו־20 בשאר הנושאים. ארבעת ציוני הרמות גלויים, ואת בוחרת ברמה פתוחה.'};
 HELP[1].body='כיסוי מלא וציון 70 ברמה 1 פותחים את רמה 2; כיסוי מלא וציון 80 ברמה 2 פותחים את רמה 3; כיסוי מלא וציון 90 ברמה 3 פותחים את רמה 4. להשלמת רמה 4 צריך לענות על כל המשפחות שיש בה ולהגיע ל־95. אפשר להשלים בכמה משחקים.';
 HELP[4].body='הציון הוא ממוצע מדדי השאלות שכבר ניסית ברמה. הכיסוי נספר לפי המשפחות הקיימות. סיפור חדש עם אותו חישוב משתמש בניקוד ובכיסוי של אותה משפחה. שאלה שעברה רמה שומרת את הניקוד שלה; ממוצע הרמות עשוי להשתנות בגלל ההרכב.';
 HELP[6].body='בוחרת משחק של 10, 20, 25, 30, 40 או 50 שאלות. אם ברמה ובנושא יש פחות שאלות, המשחק מתקצר לכמות הזמינה. כל משחק נשאר ברמה אחת; אותה משפחה לא חוזרת בו. במאגר עתידי גדול יותר משלימים את הכיסוי בכמה משחקים.';
@@ -7553,6 +7652,8 @@ if(typeof window!=='undefined'){window.getQuestionInventory48=getQuestionInvento
 HELP.splice(HELP.length-1,0,{title:'Pepper לפי המשכורת',body:'בתוכנית שלך מחלקים את המשכורת ב־100. משכורת 5,000 ₪ נותנת 50 ₪ ביום; 5,300 נותנת 53; 6,000 נותנת 60; ו־8,000 נותנת 80. ב־30 ימים אלה 1,500, 1,590, 1,800 ו־2,400 ₪. תמיד מחשבים לפי מספר הימים שכתוב בשאלה, בלי תוספת אוטומטית. זה חלק מהמשכורת, לא כסף נוסף.'});
 HELP.splice(HELP.length-1,0,{title:'משכורת ויתרה בבנק',body:'בשאלות המשכורת החודשית היא 5,000–8,000 ₪. לפעמים היא מכסה מינוס ולפעמים מצטרפת ליתרה חיובית. למשל, משכורת 6,000 ₪ אחרי מינוס 3,000 משאירה 3,000 ₪; אותה משכורת כשכבר יש 1,500 משאירה 7,500 ₪, לפני חיובים אחרים. תוספת על כמה שעות עבודה היא סכום נפרד מהמשכורת המלאה.'});
 if(typeof window!=='undefined')window.getQuestionInventory50=getQuestionInventory46;
+if(typeof window!=='undefined')window.getQuestionInventory51=getQuestionInventory46;
+HELP.splice(HELP.length-1,0,{title:'רווחי השקעות ברמה 4',body:'נוספו שלוש משפחות בכסף ולקוחות: רווח בזהב, חצי בזהב וחצי במניות, וממוצע חודשי של רווח שנתי. חלק מהשאלות מבקשות לעגל את סכום ההשקעה לאלף הקרוב. הנתונים הם דוגמאות לפני מס ועלויות, לא תחזית. רווח שנתי חלקי 12 הוא ממוצע בלבד, לא סכום שנכנס בכל חודש. כל הניקוד הקודם נשמר; השאלות החדשות מוסיפות לכיסוי הדרוש להשלמת רמה 4.'});
 if(typeof document!=='undefined')init();
 </script>
 </body>
