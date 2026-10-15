@@ -95,7 +95,7 @@ bdi.number-run{direction:ltr;unicode-bidi:isolate}
 #calculation{overflow-wrap:anywhere}
 .coverage-count{display:block;font-size:12px;line-height:1.3;color:var(--muted);white-space:nowrap}
 .quiz-topic-title{display:flex;flex-direction:column;gap:3px;min-width:0}
-#qCoverage{font-size:11px;color:var(--muted);white-space:nowrap}
+#qCoverage{font-size:11px;color:var(--muted);white-space:normal;line-height:1.3}
 .difficulty-control{display:flex;align-items:center;gap:6px;flex-shrink:0;font-size:12px;color:var(--muted)}
 #difficultyPicker{font:inherit;font-size:14px;font-weight:700;color:var(--ink);background:white;border:1px solid var(--line);border-radius:12px;min-height:38px;padding:6px 9px;max-width:110px}
 #difficultyPicker:disabled{opacity:.55}
@@ -150,7 +150,7 @@ bdi.number-run{direction:ltr;unicode-bidi:isolate}
 /* Compact level navigation: all three scores remain visible, selected score is prominent. */
 .modes{min-height:100px;max-height:132px;flex:0 0 20%}.mode:disabled{opacity:.6;background:#eef0ed}.mode.selected-general40{background:var(--green);color:white;border-color:var(--green)}.selected-general40 .tile-caption{color:#e3efd8}.general-cover40{font-size:10px;direction:ltr}.mode .tile-name{font-size:16px}.mode .score{font-size:29px}
 .topic.topic40{display:flex;flex-direction:column;align-items:stretch;justify-content:center;gap:4px;padding:8px 14px 7px 8px;text-align:right;min-height:0}
-.topic-start40{border:0;background:transparent;padding:0;text-align:right;display:flex;flex-direction:column;gap:4px;width:100%}.topic-heading40{display:flex;gap:5px;align-items:center;font-weight:bold;font-size:14px;line-height:1.15}.topic-heading40>span:first-child{font-size:19px}.topic-score40{display:flex;align-items:center;justify-content:space-between;gap:3px}.topic-score40 strong{font-size:24px;color:var(--topic);line-height:1}.topic-score40 small{font-size:10px;color:var(--muted)}.level-tabs40{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:3px}.level-tab40{border:1px solid var(--line);border-radius:7px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;background:#f5f7f2;font-size:10px;padding:3px 1px;min-height:30px}.level-tab40 b{font-size:11px}.level-tab40.selected{border-color:var(--topic);background:var(--soft)}.level-tab40:disabled{color:#727a75;opacity:.7}.topic40 .coverage-count{font-size:10px;line-height:1.1}.level-score40{font-size:13px;font-weight:bold;background:#e7efdf;border-radius:12px;padding:8px;white-space:nowrap}
+.topic-start40{border:0;background:transparent;padding:0;text-align:right;display:flex;flex-direction:column;gap:4px;width:100%}.topic-heading40{display:flex;gap:5px;align-items:center;font-weight:bold;font-size:14px;line-height:1.15}.topic-heading40>span:first-child{font-size:19px}.topic-score40{display:flex;align-items:center;justify-content:space-between;gap:3px}.topic-score40 strong{font-size:24px;color:var(--topic);line-height:1}.topic-score40 small{font-size:10px;color:var(--muted)}.level-tabs40{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:3px}.level-tab40{border:1px solid var(--line);border-radius:7px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;background:#f5f7f2;font-size:10px;padding:3px 1px;min-height:30px}.level-tab40 b{font-size:11px}.level-tab40.selected{border-color:var(--topic);background:var(--soft)}.level-tab40:disabled{color:#727a75;opacity:.7}.topic40 .coverage-count{font-size:10px;line-height:1.1}.level-score40{font-size:12px;line-height:1.35;font-weight:bold;background:#e7efdf;border-radius:12px;padding:6px 8px;white-space:nowrap;flex-shrink:0}
 @media(max-height:640px){.modes,.compact .modes,.tight .modes{min-height:86px;max-height:100px;flex-basis:18%}.topic.topic40{gap:3px;padding-block:5px}.topic-heading40{font-size:13px}.topic-score40 strong{font-size:21px}.level-tab40{min-height:27px;padding-block:2px}.stats b{font-size:17px}.stats span{font-size:10px}.general-cover40{font-size:9px}.mode .score{font-size:25px}.topic-score40 small{font-size:9px}}
 @media(max-width:350px){.topic-heading40{font-size:12px}.topic-heading40>span:first-child{font-size:16px}.level-tab40{font-size:9px}.level-tab40 b{font-size:10px}.topic-score40 small{font-size:9px}.level-score40{font-size:12px;padding:6px}}
 @media(max-height:500px) and (min-width:600px){.topic.topic40{display:grid;grid-template-columns:1fr 1fr;gap:4px}.topic-start40{grid-row:1/3}.level-tabs40{grid-column:2}.topic40 .coverage-count{grid-column:2}.modes{min-height:66px;max-height:72px}.mode .general-cover40{display:none}.level-tabs40{min-height:28px}.mode .tile-caption{display:block;font-size:10px}}
@@ -3956,6 +3956,7 @@ function normalizePendingQuestions(){
   S.used=S.used.filter(id=>id!==S.q.tpl);selectQuestion();
  }
  if(S.repair&&!S.repair.answered&&BANK.find(t=>t.id===S.repair.tpl)?.retired)S.repair=makeRepair(S.q);
+ refreshCalmPending52();
 }
 
 const PASS_SCORES48=Object.freeze([70,80,90,95]);
@@ -4187,8 +4188,8 @@ function scoreText(n){return n===null?'—':n.toFixed(1);}
 function railHtml(list,label){const cov=coverage(list);return`<span class="rail" role="meter" aria-label="${esc(label)}: ${covered(list)} מתוך ${list.length} סוגים" aria-valuemin="0" aria-valuemax="${list.length}" aria-valuenow="${covered(list)}"><i style="height:${cov*100}%"></i></span>`;}
 function renderHome(){
  refreshUnlocks40();
- $('modes').innerHTML=[0,1,2,3].map(level=>{const list=levelFamilies40(null,level),open=canLevel40(null,level);return `<button class="mode tile ${selected40(null)===level?'selected-general40':''}" data-general40="${level}" ${open?'':'disabled'} aria-label="משחק כללי, רמה ${level+1}, ציון ${scoreText(learningScore(null,level))}${open?'':', נעולה'}"><span class="tile-name">${open?'':'🔒 '}רמה ${level+1}</span><strong class="score" dir="ltr">${scoreText(learningScore(null,level))}</strong><span class="tile-caption">${level===3&&passedFourth47(null)?'הושלמה ✓':open?'יעד '+passScore44(level):'קודם כיסוי + '+passScore44(level-1)}</span><span class="general-cover40">${covered(list)} / ${list.length}</span>${railHtml(list,'כיסוי רמה '+(level+1))}</button>`;}).join('');
- $('topics').innerHTML=TOPICS.map((topic,cat)=>{const level=selected40(cat),list=levelFamilies40(cat,level);return `<div class="topic tile topic40" style="--topic:${topic.color};--soft:${topic.soft}" data-fit><button class="topic-start40" data-topic40="${cat}" aria-label="התחלת משחק ${esc(topic.name)}, רמה ${level+1}"><span class="topic-heading40"><span aria-hidden="true">${topic.icon}</span><span>${topic.name}</span></span><span class="topic-score40"><strong dir="ltr">${scoreText(learningScore(cat,level))}</strong><small>רמה ${level+1} · ${level===3&&passedFourth47(cat)?'הושלמה ✓':'יעד '+passScore44(level)}</small></span></button><div class="level-tabs40" aria-label="ציונים ובחירת רמה בנושא ${esc(topic.name)}">${levelTabs40(cat)}</div><span class="coverage-count">כוסו ${covered(list)} מתוך ${list.length} ברמה</span>${railHtml(list,'כיסוי '+topic.name+' רמה '+(level+1))}</div>`;}).join('');
+ $('modes').innerHTML=[0,1,2,3].map(level=>{const list=levelFamilies40(null,level),open=canLevel40(null,level);return `<button class="mode tile ${selected40(null)===level?'selected-general40':''}" data-general40="${level}" ${open?'':'disabled'} aria-label="משחק כללי, רמה ${level+1}, ציון ${scoreText(learningScore(null,level))}${open?'':', נעולה'}"><span class="tile-name">${open?'':'🔒 '}רמה ${level+1}</span><strong class="score" dir="ltr">${scoreText(learningScore(null,level))}</strong><span class="tile-caption">${level===3&&passedFourth47(null)?'הושלמה ✓':open?'יעד '+passScore44(level)+'% + הכל':'קודם כיסוי + '+passScore44(level-1)+'%'}</span><span class="general-cover40">${covered(list)} / ${list.length}</span>${railHtml(list,'כיסוי רמה '+(level+1))}</button>`;}).join('');
+ $('topics').innerHTML=TOPICS.map((topic,cat)=>{const level=selected40(cat),list=levelFamilies40(cat,level);return `<div class="topic tile topic40" style="--topic:${topic.color};--soft:${topic.soft}" data-fit><button class="topic-start40" data-topic40="${cat}" aria-label="התחלת משחק ${esc(topic.name)}, רמה ${level+1}"><span class="topic-heading40"><span aria-hidden="true">${topic.icon}</span><span>${topic.name}</span></span><span class="topic-score40"><strong dir="ltr">${scoreText(learningScore(cat,level))}</strong><small>רמה ${level+1} · ${level===3&&passedFourth47(cat)?'הושלמה ✓':'יעד '+passScore44(level)+'%'}</small></span></button><div class="level-tabs40" aria-label="ציונים ובחירת רמה בנושא ${esc(topic.name)}">${levelTabs40(cat)}</div><span class="coverage-count">כוסו ${covered(list)} מתוך ${list.length} ברמה</span>${railHtml(list,'כיסוי '+topic.name+' רמה '+(level+1))}</div>`;}).join('');
  document.querySelectorAll('[data-general40]').forEach(b=>b.onclick=()=>start(Number(b.dataset.general40),null));
  document.querySelectorAll('[data-topic40]').forEach(b=>b.onclick=()=>{const cat=+b.dataset.topic40;start(selected40(cat),cat);});
  document.querySelectorAll('[data-level40]').forEach(b=>b.onclick=()=>chooseLevel40(+b.dataset.scope40===6?null:+b.dataset.scope40,+b.dataset.level40));
@@ -4453,7 +4454,7 @@ const HELP=[
  {title:'הקו והלבבות',body:'הקו מתמלא כשניסית סוג שאלה חדש, גם אם טעית. יש 300 סוגים פעילים, 50 בכל נושא. הלבבות מראים הצלחה באותו סוג: תשובה נכונה מוסיפה לב, וטעות מורידה לב, עד חמישה. הם אינם משנים את הציון.'}
 ];
 
-function renderHelp(){$('bankSize48').textContent=ACTIVE.length+' משפחות · עד 20 דרכי פתרון בנושא וברמה · גרסה 51';const catalog=helpPage===HELP.length-1;$('exportBtn').textContent=catalog?'מיפוי שאלות ↓':'שמירת גיבוי ↓';$('exportBtn').onclick=catalog?exportQuestionInventory46:exportProgress;const p=HELP[helpPage];setRich('helpTitle',p.title);setRich('helpBody',p.body);$('helpPage').textContent=`${helpPage+1} / ${HELP.length}`;$('helpPrev').disabled=helpPage===0;$('helpNext').textContent=helpPage===HELP.length-1?'בחזרה למשחק':'המשך ←';show('help');}
+function renderHelp(){$('bankSize48').textContent=ACTIVE.length+' משפחות · עד 20 דרכי פתרון בנושא וברמה · גרסה 52';const catalog=helpPage===HELP.length-1;$('exportBtn').textContent=catalog?'מיפוי שאלות ↓':'שמירת גיבוי ↓';$('exportBtn').onclick=catalog?exportQuestionInventory46:exportProgress;const p=HELP[helpPage];setRich('helpTitle',p.title);setRich('helpBody',p.body);$('helpPage').textContent=`${helpPage+1} / ${HELP.length}`;$('helpPrev').disabled=helpPage===0;$('helpNext').textContent=helpPage===HELP.length-1?'בחזרה למשחק':'המשך ←';show('help');}
 function init(){
  load();renderHome();$('lengthPicker').onchange=e=>{const v=+e.target.value;if(SIZES.includes(v)){state.settings.length=v;save();}};
  
@@ -4472,7 +4473,7 @@ function levelFamilies40(topic,level){return ACTIVE.filter(t=>(topic===null||t.c
 function selected40(topic){return state.selectedLevels40?.[scope40(topic)]||0;}
 function passScore44(level){return PASS_SCORES48[level];}
 function passedFourth47(topic){return state.completed4v48?.[scope40(topic)]===true;}
-function lockedMessage44(level){return 'הרמה נעולה: צריך לענות על כל שאלות רמה '+level+' ולהגיע לציון '+passScore44(level-1)+'.';}
+function lockedMessage44(level){return 'הרמה נעולה: צריך לענות על כל שאלות רמה '+level+' ולהגיע לציון '+passScore44(level-1)+'%.';}
 function refreshUnlocks40(){
  state.selectedLevels40??=Array(7).fill(0);
  state.unlocked40??=Array(7).fill(0);
@@ -4560,13 +4561,20 @@ function finalizeState40(s,p){
 }
 function levelTabs40(topic){
  const current=selected40(topic);return [0,1,2,3].map(level=>{const open=canLevel40(topic,level),grade=scoreText(learningScore(topic,level));
- return `<button type="button" class="level-tab40 ${current===level?'selected':''}" data-level40="${level}" data-scope40="${scope40(topic)}" ${open?'':'disabled'} aria-pressed="${current===level}" aria-label="רמה ${level+1}, ציון ${grade}${open?'':', נעולה עד כיסוי מלא וציון '+passScore44(level-1)+' ברמה הקודמת'}" title="${open?'בחירת רמה '+(level+1)+' · יעד '+passScore44(level):'נפתח אחרי כל השאלות וציון '+passScore44(level-1)+' ברמה '+level}"><span>${open?'':'🔒'}${level+1}</span><b dir="ltr">${grade}</b></button>`;}).join('');
+ return `<button type="button" class="level-tab40 ${current===level?'selected':''}" data-level40="${level}" data-scope40="${scope40(topic)}" ${open?'':'disabled'} aria-pressed="${current===level}" aria-label="רמה ${level+1}, ציון ${grade}${open?'':', נעולה עד כיסוי מלא וציון '+passScore44(level-1)+' ברמה הקודמת'}" title="${open?'בחירת רמה '+(level+1)+' · יעד '+passScore44(level)+'% וכיסוי מלא':'נפתח אחרי כל השאלות וציון '+passScore44(level-1)+'% ברמה '+level}"><span>${open?'':'🔒'}${level+1}</span><b dir="ltr">${grade}</b></button>`;}).join('');
 }
+// Both score and complete coverage refer to the selected scope, including
+// all six topics in a general game. The required total is never hard-coded.
+function levelGoal52(topic,level){const list=levelFamilies40(topic,level),score=learningScore(topic,level);return{level:level+1,target:passScore44(level),score,scoreText:score===null?'—':scoreText(score)+'%',covered:covered(list),total:list.length};}
 function updateQuizLevel40(q){
  if(closedReview?.migrated47){setRich('levelScore40','עיון במשחק שלפני העדכון · הניקוד נשמר');$('qCoverage').textContent='';$('qLevel').textContent='תשובה שמורה';return;}
  const level=Number.isInteger(q.courseLevel40)?q.courseLevel40:ACTIVE.find(t=>t.id===q.tpl)?.rank??q.level;
- const scope=closedReview?closedReview.topic??null:S?.topic??null;setRich('levelScore40',`רמה ${level+1} · ${scoreText(learningScore(scope,level))} · יעד ${passScore44(level)}`);
- const list=levelFamilies40(q.cat,level);setRich('qCoverage',`כוסו ${covered(list)} מתוך ${list.length} ברמה`);
+ const scope=closedReview?closedReview.topic??null:S?.topic??null;
+ const goal=levelGoal52(scope,level);
+ setRich('levelScore40',`ציון ${goal.scoreText}\nכוסו ${goal.covered} מתוך ${goal.total}`);
+ setRich('qCoverage',`יעד: ${goal.target}% + כל ${goal.total} השאלות`);
+ $('levelScore40').setAttribute('aria-label',`ציון נוכחי ${goal.scoreText}; כוסו ${goal.covered} מתוך ${goal.total} שאלות ברמה`);
+ $('qCoverage').setAttribute('aria-label',`להשלמת רמה ${level+1} צריך ציון ${goal.target}% וגם לענות על כל ${goal.total} השאלות. אפשר בכמה משחקים.`);
  $('qLevel').textContent=isReview()?'עיון בתשובה שמורה':S?.repair?'חיזוק באותה רמה':'רמה '+(level+1);
 }
 HELP.splice(0,HELP.length,
@@ -7577,6 +7585,172 @@ function refreshMoneyQuestion50(q){
  return fresh;
 }
 
+// V52 editorial layer ONLY. No added family, new math, random draws or score changes.
+// Every active family is audited, including legacy IDs whose stories changed.
+// Reserve suggestions are planning reminders after the calculation; they do not
+// silently add a numeric requirement to a question or move its correct answer.
+const CALM_THEMES52={
+ shopping:{name:'קנייה מתוכננת',lines:['בודקת רשימה ויתרה לפני הקופה, כדי לבחור בנחת.','משאירה בתקציב מקום למה שכבר תכננת, ולא קונה מתוך לחץ.','בודקת מה צריך לפני היציאה; קנייה רגועה מתחילה בבית.']},
+ offer:{name:'החלטה בלי לחץ מכירה',lines:['מותר לומר: אבדוק בנחת ואחליט אחר כך. מבצע לא מחייב קנייה.','בודקת צורך ומחיר כולל לפני הסכמה, גם כשאומרים ״רק עכשיו״.','קונה לפי התכנון; לא צריך לנצל כל הנחה כדי ליהנות.']},
+ receipt:{name:'בדיקה שמונעת אי־הבנה',lines:['בודקת את החשבון ומבקשת תיקון בנחת לפני התשלום.','שומרת אישור תשלום ובודקת יחד את הפירוט, בלי למהר ובלי להאשים.','רגע לבדיקה מבהיר מה שולם ומה עוד נשאר.']},
+ stock:{name:'מלאי מוכן מראש',lines:['בודקת מה כבר יש ומכינה רשימה, כדי לא להשלים קניות בלחץ.','מתכננת מה צריך ומתי; לא מחכה שהדבר הנחוץ ייגמר.','מכינה את מה שצריך מראש, בכמות שימושית ובלי קנייה כפולה.']},
+ food:{name:'אוכל מוכן וזמן לארוחה',lines:['מכינה אוכל מראש ומשאירה זמן לאכול בנחת, גם ביום עמוס.','שומרת ארוחה זמינה ליום עמוס, בלי צורך לקנות בלחץ.','תוכנית פשוטה לאוכל משאירה יותר זמן וכסף להמשך היום.']},
+ measure:{name:'הכנה ובדיקה לפני הוספה',lines:['מכינה את המצרכים ובודקת את הכמות בנחת לפני ההוספה.','עוצרת לקרוא את הכמות; מוסיפה בהדרגה ולא מתוך לחץ.','רושמת את הכמות הרצויה לפני שמתחילה, כדי לא לנחש באמצע.']},
+ cookingTime:{name:'זמן וטיימר במטבח',lines:['מכוונת תזכורת לכל שלב ומשאירה זמן לסיים בלי למהר.','מכינה מראש את מה שצריך לשלב הבא, כדי לא לחפש כשהטיימר מצלצל.','שומרת זמן להכנה ולארוחה; אם הזמן קצר, בוחרת תוכנית פשוטה יותר.']},
+ water:{name:'מים זמינים לאורך היום',lines:['מכינה מים לפני היציאה ומשאירה הפסקות לשתייה לאורך היום.','בודקת שיש מים לדרך לפני שהיום נעשה עמוס.','מחזיקה מים נגישים כדי לזכור לשתות גם כשעסוקה.']},
+ medicine:{name:'רישום הוראות וזמנים',lines:['רושמת את השעה ואת ההוראה; אם לא ברור, מבררת ולא מנחשת.','מסמנת תזכורת לפי ההוראה שניתנה, כדי לא להסתמך רק על הזיכרון.']},
+ battery:{name:'ספייר סוללה וזמינות',lines:['מטעינה מראש ומשאירה סוללה לניווט ולהודעות, גם אם הדרך תתארך.','בודקת טעינה בעבודה לפני היציאה; לא מחכה לסוללה כמעט ריקה.','שומרת סוללה לדרך ומתכננת טעינה מוקדם, בלי לחכות לרגע האחרון.']},
+ sleep:{name:'זמן שינה וריכוז',lines:['מקדימה את ההתארגנות כדי לשמור על זמן השינה. שינה מספקת תומכת בריכוז.','עוצרת את הערב בזמן שתכננת; שינה מספקת עוזרת גם להתמודד עם היום בנחת.','משאירה זמן להתארגנות לפני השינה, בלי לדחות את הלילה בשביל עוד משימה.']},
+ rest:{name:'הפסקות ומנוחה',lines:['משאירה זמן לאכול, לשתות ולנוח; לא ממלאת כל דקה במשימה.','מתכננת הפסקה מראש, כדי שלא תיעלם בתוך יום עמוס.','זמן מנוחה הוא חלק מהתוכנית, לא רק מה שנשאר בסוף.']},
+ work:{name:'הכנסה עם מקום למנוחה',lines:['מתכננת עבודה לצד זמן לדרך, לאוכל ולשינה, בלי למלא את כל היום.','בודקת את שעות העבודה והתשלום בנחת, ומשאירה זמן להתאוששות.','תוספת עבודה מתאימה כשנשאר גם זמן לדרך ולשינה שתכננת.']},
+ travel:{name:'ספייר בדרך',lines:['משאירה זמן נוסף להמתנה ולמעברים; לא בונה על ריצה כדי להספיק.','בודקת את הדרך מראש ויוצאת עם ספייר, גם כשנדמה שהכול קרוב.','כשזמן ההגעה משתנה, מעדכנת את התוכנית ואת מי שמחכה לך.']},
+ grandma:{name:'קודם הדרך הארוכה, אחר כך מנוחה',lines:['נוסעת מהעבודה בבת ים לסבתא ליד הפלמנקו; נחה אחרי הדרך הארוכה ושומרת זמן לקום.','יוצאת מהעבודה ישר לסבתא בהרצליה, עם ספייר בדרך וזמן להתארגנות לפני החוג.']},
+ timing:{name:'זמן הכנה ומרווח ביומן',lines:['מוסיפה ביומן זמן להכנה ולמעבר, ולא קובעת הכול ברגע האחרון.','רושמת שעה ותזכורת מראש, כדי לא לסמוך רק על הזיכרון.','הזמן בחישוב עוזר לתכנן; משאירה גם מרווח לדברים שמשתנים.']},
+ deadline:{name:'תזכורת לפני מועד',lines:['מסמנת תזכורת לפני המועד, כדי שיישאר זמן לברר או לתקן.','מטפלת במה שצריך לפני היום האחרון; מרווח קטן נותן זמן לשינוי.','רושמת את התאריך ובודקת מראש מה צריך להכין לקראתו.']},
+ clockClarity:{name:'תיאום שעה ברורה',lines:['מוודאת יחד את היום והשעה; בירור קטן מראש חוסך אי־הבנה.','כותבת שעה ברורה ביומן ומאשרת אותה עם מי שמחכה.']},
+ budget:{name:'ספייר כסף לצרכים ולשינויים',lines:['שומרת כסף לצרכים שכבר ידועים וגם להפתעה קטנה, לפי מה שאפשר.','בודקת מה באמת פנוי אחרי ההוצאות המתוכננות, ואז בוחרת בנחת.','לא חייבת לנצל את כל הסכום; כסף שנשאר נותן מרווח להמשך.']},
+ commitments:{name:'התחייבות ברורה ובתקציב',lines:['בודקת מחיר מלא, מועד ותנאי ביטול לפני התחייבות; מותר לקחת זמן להחליט.','משאירה מקום בתוכנית גם לחודשים הבאים, לפני שמוסיפה תשלום חדש.','סיכום כתוב של המחיר והמועד עוזר לשני הצדדים להבין למה התחייבו.']},
+ saving:{name:'חיסכון כמרווח לבחירה',lines:['שומרת חלק מהכסף שהתפנה; כך נשאר מרווח לשינוי ולמטרה שבחרת.','בונה את החיסכון בקצב שמתאים להוצאות החיוניות, בלי לחץ להשלים הכול מיד.','חיסכון מתוכנן משאיר כסף למטרה וגם מקום לחשוב לפני הוצאה חדשה.']},
+ investing:{name:'הבנת סכומים בלי להסתמך על רווח עתידי',lines:['בודקת מה זמין לצרכים הקרובים; רווח עתידי אינו ספייר שכבר נמצא בחשבון.','קוראת את הנתונים בנחת ומפרידה בין כסף לעתיד לבין הוצאות שכבר קרובות.']},
+ tips:{name:'המחיר הכולל ידוע מראש',lines:['כוללת גם טיפ ותוספות בתכנון, כדי שהחשבון לא יפתיע בסוף.','בודקת מראש את המחיר הכולל ומשאירה מקום להמשך היום.','מסכמת מה כלול במחיר לפני שמזמינה, כדי לשלם בנחת.']},
+ sharedBill:{name:'סיכום תשלום משותף',lines:['מסכמת מראש את חלוקת התשלום, כדי שהחשבון יהיה ברור ונעים לכולם.','בודקת את החלוקה יחד לפני התשלום; שאלה קצרה יכולה למנוע אי־הבנה.']},
+ records:{name:'רישום ברור במקום ניחוש',lines:['רושמת את הנתון ואת היחידה ובודקת בנחת, כדי להסביר בלי אי־הבנה.','אם פרט חסר, מבררת ורושמת אותו; לא חייבת לענות מהזיכרון מיד.','בודקת את הרישום לפני שמסכמת; מותר לעצור ולוודא שהבנת נכון.']},
+ therapyTime:{name:'ספייר בין טיפולים',lines:['משאירה ביומן זמן לרישום, להכנה ולמנוחה לפני המשפחה הבאה.','מתאמת שינוי בזמן עם ההורים; לא מאיצה בילד כדי להספיק הכול.','מרווח ביומן מאפשר להסביר בנחת ולהכין את החדר בלי לחץ.']},
+ therapyEquipment:{name:'ציוד וחדר מוכנים',lines:['מכינה ובודקת ציוד לפני המפגש, כדי לקבל את הילדים בנחת.','בודקת מראש שיש מקום וציוד לכל המשתתפים; לא מחכה להגעת המשפחה.','ספייר קטן בציוד יכול לעזור כשמשהו חסר, בלי להעמיס קניות.']},
+ parentPayment:{name:'שקיפות מול ההורים',lines:['מסכמת עם ההורים מחיר ומועד בכתב, כדי שלא יהיו הפתעות או אי־הבנות.','בודקת יחד מה שולם ומה נשאר; תיקון רגוע שומר על חשבון ברור.','משאירה זמן להסביר את החשבון ולשמוע שאלות לפני שמבקשת תשלום.']}
+};
+const CALM_DEFAULTS52=['shopping','food','budget','budget','timing','records'];
+const CALM_FAMILY_THEME52={};
+function calmAssign52(theme,ids){for(const id of ids.split(/\s+/).filter(Boolean)){
+ if(CALM_FAMILY_THEME52[id])throw Error('Duplicate calm assignment '+id);
+ CALM_FAMILY_THEME52[id]=theme;
+}}
+calmAssign52('offer',`0-offer 0-discount 0-v30-pct20 0-v30-quarteroff 0-v30-secondhalf 0-v30-3for2 0-v30-points 0-v30-threshold 0-v30-pctvsfixed 0-v40-needed-discount 0-v40-offer-cap 0-v46-whole-credit 0-v47-coupon-cap 0-v47-minimum-spend-trap 0-v47-coupon-eligible 2-outing-8 2-v30-oneplusone 2-v30-punchcard 2-v30-pct30 2-v40-visit-pass 2-v47-voucher-before-expiry 3-v30-workforit 3-v46-two-discounts 3-v46-compare-three-totals`);
+calmAssign52('receipt',`0-receipt 0-v30-compensate 0-v40-order-refund 0-v47-receipt-double-scan 0-v47-replacement-refund 0-v47-receipt-tax-included 0-v47-return-part-of-bundle 2-m30-rest 2-v40-bill-missing 2-v47-service-included 2-v47-deposit-credit 2-v47-refill-included 3-clients-22`);
+calmAssign52('stock',`0-frozen 0-stock 0-m30-equalparts 0-m30-wholepacks 0-m30-counttimes 0-m30-countplus 0-m30-addcount 0-m30-less 0-v30-weekneed 0-v30-leftover 0-v30-bottles15 0-v30-gramstokg 0-v30-oillast 0-v40-oil-bottles 0-v40-storage-limit 0-v40-weekly-stock 0-v47-split-pack-weight 1-v46-count-home-stock 1-v46-weekday-reminder`);
+calmAssign52('deadline',`0-v30-returnby 0-v46-return-deadline 0-v46-warranty-end 1-v30-datediff 1-v46-flower-care-days 1-v46-days-between-months 2-v47-cancellation-hours 3-v30-tosalary 3-v30-payby 3-v46-invoice-due-date 4-v30-nextwed 4-v46-next-wednesday 4-v46-weekly-last-date 4-v46-days-and-weeks 5-professional-holistic-parent-followup 5-v46-weekly-session-count`);
+calmAssign52('timing',`0-v30-closing 0-v30-deliverytime 0-v30-shoptime 0-v47-shopping-time-limit 1-m30-wholerounds 1-v30-laundrylen 1-v46-two-laundry-cycles 1-v46-minutes-to-hours 2-outing-20 2-outing-36 3-v46-room-hours-share 2-v30-mealend 2-v30-leavetable 2-v30-mealduration 2-v30-satlength`);
+calmAssign52('water',`1-cups 1-liters 1-breaks 1-water-walk 1-water-sun 1-water-flamenco 1-water-liters-back 1-water-several-days 1-m30-mlleft 1-m30-pourleft 1-m30-mladd 1-m30-howmanycups 1-m30-counttimes 1-m30-mldiff 1-v30-fraction 1-v30-pctdone 1-v30-glasses 1-v30-remainder 1-v30-avgml 1-v30-litrecups 1-v30-ratio 1-v40-extra-water 4-v46-middle-of-window`);
+calmAssign52('measure',`1-home-12 1-home-28 1-home-34 1-home-37 1-water-chicken-soup 1-m30-halfcount 1-m30-countplus 1-v30-boiler 1-v30-laundryend 1-v30-weekday 1-v30-minhm 1-v30-netweight 1-v40-double-soup 1-v40-scale-remove 1-v40-recipe-three-halves 1-v46-recipe-water-parts 1-v47-bowl-safe-capacity 1-v47-recipe-one-egg`);
+calmAssign52('cookingTime',`1-micropress 1-microremain 1-m30-durtimes 1-m30-duradd 1-v30-dinnerstart 1-v30-roast 1-v30-roundmin 1-v40-two-lasagnas 1-v40-soup-resume 1-v40-meal-parallel 1-v40-micro-batches 1-v46-divide-prep-time 1-v46-round-prep-times`);
+calmAssign52('medicine',`1-medicine 1-m30-durleft 4-v30-daysuntil`);
+calmAssign52('battery',`1-v30-battery 1-v46-battery-charge 1-v46-battery-work 1-v46-battery-video 1-v46-battery-reserve 1-v47-charge-interruption 4-v40-tasks-overlap 4-v46-scheduled-reminders 4-v47-charge-before-departure`);
+calmAssign52('records',`1-m30-countleft 3-v30-words 5-m30-convtimesplus 5-m30-duradd`);
+calmAssign52('food',`2-m30-countleft 2-m30-equalparts 2-v30-pizza 2-v30-rollpieces 2-v46-picnic-portions 2-v46-portions-plus-spare 2-v47-meal-two-days`);
+calmAssign52('tips',`2-tip10 2-tip15 2-dessert 2-roundtip 2-m30-priceplus 2-v30-businesslunch 2-v30-maxdish 2-v40-two-dishes-tip 2-v40-discount-tip 2-v40-takeaway-compare 2-v40-menu-substitute 2-v47-tip-only-own-food 2-v47-add-on-per-person 2-v47-tip-budget-check`);
+calmAssign52('sharedBill',`2-m30-share 2-v30-ownshare 2-v30-tipsplit 2-v30-groupminus 2-v30-tipeach 2-v40-shared-voucher 2-v46-own-and-shared`);
+calmAssign52('saving',`0-v40-delivery-minimum 2-homesave 2-m30-howmanytimes 2-v30-parking 2-v30-hotelstay 2-v30-treat 2-v40-weekly-home 2-v40-picnic-hotel 2-v40-coffee-switch 2-v46-rounded-price-gap 2-v47-picnic-per-day 2-v47-breakfast-room-choice 2-v47-takeaway-container-fee 2-v47-save-five-visits 3-saveup 3-m30-pricetimes 3-m30-share 3-v30-round100 3-v30-atmfee 3-v30-monthsave 3-v40-sevilla-gap 3-v46-three-quarters-save 3-v46-growing-savings 3-v46-saving-goal-date 3-v46-split-saving-treats 4-v30-mondays 4-v30-pctevening 4-v30-proportion`);
+calmAssign52('commitments',`2-v47-advance-total 3-offer-payments-left 3-offer-rounded-cost 3-m30-timesminus 3-v30-bnpl 3-v40-two-commitments 3-v46-installment-extra 3-v46-last-payment-month 3-v46-billing-cutoff 3-v47-subscription-stopped`);
+calmAssign52('investing',`3-clients-33 3-cards-automation 3-cards-round-fees 3-m30-priceplus 3-m30-inout 3-v30-pctof 3-v30-threequarters 3-v30-lastpayment 3-v30-avgmonth 3-v30-productdiff 3-v30-overtime 3-v30-enoughby 3-v30-doublediscount 3-v30-splitunequal 3-v40-pension-flows 3-v40-gain-loss 3-v51-gold-profit 3-v51-split-profit 3-v51-monthly-profit`);
+calmAssign52('work',`3-earned-extra-budget 3-v30-weekpay 3-v30-twoshifts 3-v40-extra-work-net 3-v46-agreed-extra-pay 4-shift-extra-income 4-v30-weekhours 4-v30-fractionpay 4-v40-week-paid`);
+calmAssign52('sleep',`4-sleeplength 4-m30-bedtime 4-v30-sleepdebt 4-v30-shiftbed 4-v30-daysweeks 4-v30-afterclass 4-v40-earlier-shift 4-v40-episode-cost 4-v46-snooze-cost`);
+calmAssign52('rest',`4-shiftbreak 5-onehour 4-m30-durleft 4-m30-durtimes 4-m30-enough 4-v30-snooze 4-v30-athome 4-v40-rest-deadline 4-v46-half-hour-blocks`);
+calmAssign52('grandma',`4-schedule-14 4-m30-between 4-v30-viahome 4-v30-waitweek 4-v30-earliest 4-v30-sparegap 4-v30-bagtime 4-v40-work-grandma-rest 4-v46-home-detour`);
+calmAssign52('travel',`4-decimal 4-m30-duradd 4-m30-ravkav 4-v30-rulelate 4-v30-lasttrain 4-v30-nexttrain 4-v30-missedby 4-v30-walkspeed 4-v30-monthlypass 4-v30-fare 4-v30-rounddur 4-v30-termend 4-v30-hourstodays 4-v30-worstcase 4-v40-overtime-departure 4-v40-bus-delay-buffer 4-v40-missed-connection 4-v46-late-estimate 4-v46-count-class-days 4-v46-review-average-journey 4-v46-walking-time 4-v46-travel-part-of-evening 4-v46-weekly-wait-review 4-v46-round-route-parts 4-v46-pass-break-even 4-v46-next-train-arrival`);
+calmAssign52('clockClarity',`4-v30-h24 4-v30-phrases`);
+calmAssign52('therapyTime',`5-professional-table-mid 5-professional-session-start 5-professional-weekly-capacity 5-professional-schedule-overlap 5-professional-stations-no-room 5-m30-durleft 5-m30-plannedleft 5-m30-clockplus 5-m30-durshare 5-v30-homepractice 5-v30-rounds 5-v30-workrest 5-v30-weeklydates 5-v40-two-sessions-gap 5-v40-plan-feasibility 5-v40-late-session 5-v40-home-plan-flex 5-v40-zoom-time 5-v46-range-middle 5-v46-session-time-parts 5-v47-meeting-buffer`);
+calmAssign52('therapyEquipment',`5-professional-group-equipment 5-v30-oilmassages 5-v30-grouprotation 5-v30-workshopceil 5-v40-group-equipment 5-v46-parent-handouts 5-v46-prep-rounds-seconds 5-v46-printing-agorot 5-v47-room-capacity-parents 5-v47-station-spares`);
+calmAssign52('parentPayment',`5-professional-discount-agreed 5-professional-series-zoom-offer 5-professional-series-total 5-m30-countleft 5-m30-rest 5-m30-timesminus 5-m30-minustimes 5-m30-share 5-v30-perhourrate 5-v30-receiptsum 5-v30-incomeestimate 5-v40-free-first-balance 5-v40-refund-agreement 5-v47-overpaid-receipt 5-v47-credit-next-meeting 5-v47-workshop-net 5-v47-pack-first-free 5-v47-two-parent-payments`);
+const CALM_EXACT52={
+ '5-m30-duradd':'רושמת גם את שנת היום וגם את שנת הלילה, כדי לדבר עם ההורים על תמונה מלאה ובנחת.',
+ '5-v30-homepractice':'מסכמת עם ההורים מתי הפעילות משתלבת בשגרה בנחת, ומשאירה מקום גם למנוחה ולשינוי.',
+ '0-v30-closing':'אם הזמן קצר מדי לקנייה בנחת, דוחה מה שלא דחוף. שעת הסגירה אינה סיבה לרוץ.',
+ '0-v30-shoptime':'זה הזמן שחושב לקנייה; בתכנון מוסיפה מרווח לתור ארוך או לשינוי.',
+ '0-v47-shopping-time-limit':'הזמן שנותר הוא גבול, לא יעד למלא. אם אין מרווח, קונה רק מה שחיוני או דוחה.',
+ '0-v30-pctup':'בודקת גם מתי הציוד יגיע, ומשאירה זמן לתקלה; מחיר נמוך לבדו לא מספיק.',
+ '0-v47-cash-before-refund':'מחכה שההחזר יופיע בפועל; לא מתחייבת על כסף שעדיין לא הגיע.',
+ '1-v46-battery-charge':'מחברת למטען בעבודה מוקדם ומשאירה מרווח לטעינה, כדי לצאת עם טלפון זמין.',
+ '1-v46-battery-work':'בודקת סוללה במהלך העבודה ומטעינה לפני הדרך, לא רק כשהסוללה כמעט ריקה.',
+ '1-v47-charge-interruption':'משאירה זמן נוסף לטעינה ובודקת שהיא חודשה; לא דוחה בגללה את היציאה לרכבת.',
+ '1-v46-battery-reserve':'שומרת סוללה לדרך ודוחה שיחה לא דחופה כשאין קליטה. בממ״ד או במקלט נשארת במקום מוגן.',
+ '1-v47-bowl-safe-capacity':'משאירה מקום בקערה כדי להעביר אותה בנחת, בלי למלא עד הקצה.',
+ '1-v40-scale-remove':'טעות קטנה בכמות אפשר לבדוק ולתקן בנחת; אין צורך להוסיף עוד מתוך לחץ.',
+ '1-v30-everyN':'עוצרת ופונה לעזרה לפי הצורך; בטיחות קודמת להספק, גם אם התוכנית משתנה.',
+ '1-m30-countleft':'רושמת מי גדולה ממי לפני החישוב. אם לא בטוחה, שואלת בנחת במקום לנחש.',
+ '2-v30-tip20':'צורך בריאותי דחוף קודם לפינוק. משנה את הבילוי בנחת ושומרת כסף לתרופה.',
+ '2-v47-tip-budget-check':'העיגול משאיר מרווח קטן; בתשלום בודקת את החשבון המדויק ולא מוסיפה חיוב פעמיים.',
+ '3-m30-rest':'בודקת מה פנוי אחרי הכסף שכבר שמור; לא חייבת להוציא את כל מה שנשאר.',
+ '3-v30-daysx':'בודקת את היתרה שכבר נכנסה בפועל, ומשאירה מקום להוצאות הבאות.',
+ '3-v30-avgday':'אם ההוצאות גבוהות מההפקדות, בודקת בנחת מה אפשר לדחות לפני שהיתרה נגמרת.',
+ '3-v46-manual-loads-left':'מסמנת תזכורת לטעינה ידנית ומוודאת יתרה לפני היציאה, כדי לא להיתקע בקופה.',
+ '4-v30-nexttrain':'זו הרכבת הבאה לפי הלוח; לנסיעה בפועל מגיעה מוקדם לרציף ולא בונה על הדקה האחרונה.',
+ '4-v46-review-average-journey':'הממוצע לא מכסה כל עיכוב. לתכנון יציאה שומרת גם מרווח לזמן דרך ארוך יותר.',
+ '4-v40-overtime-departure':'תוספת עבודה צריכה להשאיר זמן לדרך ולספייר; אם לא, מתאמת שינוי מראש.',
+ '4-v47-charge-before-departure':'זו שעת ההתחלה האחרונה בחישוב; בפועל מטעינה מוקדם יותר בעבודה כדי להשאיר ספייר.',
+ '4-v46-snooze-cost':'מכינה את הערב מוקדם ושומרת את זמן השינה שתכננת; לא בונה על התארגנות בלחץ.',
+ '4-v30-avgcommute':'מבדילה בין מועד אמיתי לבין לחץ של מוכר. אם לא תספיקי משימה חשובה, מעדכנת בזמן.',
+ '5-professional-printing':'קוראת מיד לצוות הרפואי. אפשר לפעול ברוגע בלי לדחות עזרה דחופה.',
+ '5-v30-weeklydates':'עוצרת ומקשיבה לילד, מעדכנת את ההורה ופונה לעזרה לפי הצורך; השעון לא קודם לבריאות.',
+ '5-professional-stations-no-room':'שומרת על המנוחה ומתאמת שינוי עם ההורים; לא מאיצה בילד כדי לסיים את כל התחנות.',
+ '5-v40-two-age-gaps':'מסבירה מה נמדד ומה עדיין צריך לברר; הפרש בחודשים אינו אבחנה או סיבה להלחיץ.',
+ '5-development-time':'רושמת מה הילד עושה ומה עוד לא ומבררת עם איש מקצוע כשיש חשש; המספר לבדו אינו אבחנה.',
+ '5-v47-parent-diary-missing':'מבקשת את הרישום החסר בנחת ומסמנת מה לא ידוע, בלי להמציא ובלי להאשים.',
+ '5-v47-attendance-cancelled':'מבררת יחד אילו מפגשים התקיימו; לא מייחסת למשפחה ביטול של המקום.',
+ '5-v46-range-middle':'האמצע עוזר להבין את ההערכה; ביומן שומרת גם זמן לאפשרות שההכנה תתארך.'
+};
+const CALM_INTROS52={
+ '0-units':'בודקת את הסכום מראש. ',
+ '0-v46-rounded-basket-product':'לתכנון הקנייה בנחת: ',
+ '0-v47-deposit-at-checkout':'בודקת שהכרטיס מוכן לפני הקופה. ',
+ '1-v40-two-lasagnas':'כדי לתכנן את הערב בנחת: ',
+ '1-v46-boxes-and-spares':'מכינה מראש לימים עמוסים. ',
+ '1-v46-battery-work':'בודקת טעינה לפני שהסוללה תיגמר. ',
+ '2-tip10':'מתכננת גם את הטיפ מראש. ',
+ '2-v40-menu-substitute':'בודקת את ההזמנה בלי לחץ. ',
+ '3-m30-rest':'לפני קנייה נוספת, בודקת מה פנוי. ',
+ '3-v40-separate-reserve':'משאירה כסף לצרכים הקרובים. ',
+ '3-v46-billing-cutoff':'בודקת את החיוב מראש, בלי הפתעות. ',
+ '3-v46-whole-visits-budget':'מתכננת פינוק בלי לחץ של חוב. ',
+ '4-m30-clockminus':'מתכננת את הזמן בנחת. ',
+ '4-v40-appointment-buffer':'משאירה מעבר רגוע בין התוכניות. ',
+ '5-professional-table-mid':'שומרת ספייר בין המשפחות. ',
+ '5-v40-two-sessions-gap':'מתכננת גם זמן להתאוששות. ',
+ '5-v47-two-parent-payments':'בודקת את התשלום יחד עם ההורים. ',
+ '5-v47-station-spares':'מכינה את הציוד לפני שהילדים מגיעים. '
+};
+// Clearer phrasing only; the numeric data and four options remain identical.
+const CALM_CLEAR52={
+ '2-v47-deposit-credit':text=>text.replace('שילמת מראש תשלום מראש של','שילמת מראש'),
+ '5-v47-credit-next-meeting':text=>text.replace(/להורה נשאר סכום שמורידים מהתשלום מוסכם של ([\d,]+) ₪ מהתשלום הקודם\./,'מהתשלום הקודם נשארו להורה $1 ₪ שאפשר להשתמש בהם הפעם.'),
+ '2-v30-tipeach':text=>text.replace('חברות משאירה יחד','חברות משאירות יחד')
+};
+const CALM_SHORT52={shopping:'בודקת בנחת לפני קנייה.',offer:'מותר לקחת זמן להחליט.',receipt:'מבררת את הפירוט בלי להאשים.',stock:'מכינה מראש במקום למהר אחר כך.',food:'משאירה זמן לארוחה בנחת.',measure:'בודקת לפני שמוסיפה.',cookingTime:'מכוונת תזכורת לפני שמתחילה.',water:'מכינה מים לפני היציאה.',medicine:'רושמת כדי לא לנחש.',battery:'שומרת ספייר סוללה לדרך.',sleep:'שומרת זמן לשינה ולריכוז.',rest:'מנוחה היא חלק מהתוכנית.',work:'שומרת גם זמן לשינה ולדרך.',travel:'לא בונה על הדקה האחרונה.',grandma:'קודם הדרך הארוכה, ואז המנוחה.',timing:'משאירה גם זמן למעבר.',deadline:'מסמנת תזכורת מראש.',clockClarity:'מוודאת יחד שהשעה ברורה.',budget:'משאירה כסף גם להמשך.',commitments:'לא חייבת להחליט מיד.',saving:'משאירה מרווח גם לשינוי.',investing:'בודקת בנחת לפני החלטה.',tips:'שומרת מקום גם לתוספות.',sharedBill:'מסכמת יחד לפני התשלום.',records:'מותר לעצור ולברר.',therapyTime:'משאירה מעבר רגוע ביומן.',therapyEquipment:'בודקת ציוד לפני ההגעה.',parentPayment:'סיכום ברור מונע אי־הבנה.'};
+function calmTheme52(t){return CALM_FAMILY_THEME52[t.id]||CALM_DEFAULTS52[t.cat];}
+function calmLine52(q,theme){let hash=0;for(const c of q.text)hash=(Math.imul(hash,31)+c.charCodeAt(0))>>>0;const lines=CALM_THEMES52[theme].lines;return lines[hash%lines.length];}
+function calmNudge52(q,t){
+ if(CALM_EXACT52[t.id])return {text:CALM_EXACT52[t.id],action:'specific-rewording'};
+ const theme=calmTheme52(t),old=String(q.nudge||'').trim();
+ if(theme==='water'&&/מרק|מתכון|סיר|חלב|מיץ/.test(q.text)&&(!old||old==='אפשר לפרק לצעדים קטנים. אין צורך למהר.'))return{text:'בודקת את הכמות ומכינה מה שצריך לפני שמתחילה.',action:'contextual-reminder'};
+ if(!old||old==='אפשר לפרק לצעדים קטנים. אין צורך למהר.'||old==='רושמת את הנתונים, בודקת את החשבון, ומסבירה להורים בביטחון.')return{text:calmLine52(q,theme),action:'contextual-reminder'};
+ // Preserve useful explanations, risk caveats and existing personal context.
+ // No blanket replacement of clinical, financial or safety information.
+ const fixed=old.replace('לפני שמסכימות','לפני שמסכימה').replace('כוללות גם את הטיפ','כוללת גם את הטיפ');
+ if(/ספייר|בנחת|לחץ|מרווח|מוקדם|מנוחה|שינה|רוגע|בנפרד|מראש|קודם|הפתע|תזכורת|לאט|אי־הבנה/.test(fixed))return{text:fixed,action:fixed===old?'already-supportive':'grammar-only'};
+ const extra=CALM_SHORT52[theme];
+ return fixed.length+extra.length+1<=150?{text:fixed+' '+extra,action:'short-contextual-addition'}:{text:fixed,action:'preserve-important-detail'};
+}
+function applyCalm52(q,t){
+ if(!q||!t||q.calm52?.version===52)return q;
+ const result=calmNudge52(q,t);q.nudge=result.text;
+ const intro=CALM_INTROS52[t.id],originalText=q.text;
+ if(CALM_CLEAR52[t.id])q.text=CALM_CLEAR52[t.id](q.text);
+ if(intro&&q.text.length+intro.length<=250)q.text=intro+q.text;
+ q.calm52={version:52,theme:calmTheme52(t),action:result.action,questionChanged:q.text!==originalText,answerChanged:false};return q;
+}
+for(const id of [...Object.keys(CALM_FAMILY_THEME52),...Object.keys(CALM_EXACT52),...Object.keys(CALM_INTROS52),...Object.keys(CALM_CLEAR52)])if(!ACTIVE.some(t=>t.id===id))throw Error('Unknown editorial family '+id);
+for(const t of ACTIVE){
+ t.calmReview52={reviewed:true,theme:calmTheme52(t),themeName:CALM_THEMES52[calmTheme52(t)].name,
+  questionWording:Boolean(CALM_INTROS52[t.id]||CALM_CLEAR52[t.id]),answerWording:false,specificReminder:CALM_EXACT52[t.id]||null};
+ const original=t.gen;t.gen=(...args)=>applyCalm52(original(...args),t);
+}
+// Only unanswered pending snapshots receive wording edits. No new generation,
+// shuffled options, changed math, rescoring or changes to answered review history.
+function refreshCalmPending52(){for(const q of [S?.q,S?.repair])if(q&&!q.answered)applyCalm52(q,ACTIVE.find(t=>t.id===q.tpl));}
+const CALM_REVIEW52={version:52,totalReviewed:ACTIVE.length,addedFamilies:0,removedFamilies:0,
+ themes:Object.fromEntries(Object.entries(CALM_THEMES52).map(([key,t])=>[key,t.name])),
+ scope:'Wording and contextual reminders only; preserve calculations, random parameters, answer indices and progress.',
+ noSubliminalClaim:true,sleepSource:'https://www.nhlbi.nih.gov/health/sleep-deprivation/health-effects'};
+
 // QUESTION ORIGINALITY CONTRACT — numbers, names and story wording are NOT IDs.
 // SOLUTION_TYPES46 is a hand-reviewed taxonomy of required calculation/decision
 // steps. Same solution type = a learning repetition, not necessarily identical
@@ -7613,19 +7787,19 @@ const QUESTION_CATALOG46=ACTIVE.map(t=>({id:t.id,topic:TOPICS[t.cat].name,cat:t.
  repeatedOverall:t.solutionTypes46.some(key=>QUESTION_DUPLICATES46[key].count>1),
  repeatedInTopic:t.solutionTypes46.some(key=>QUESTION_DUPLICATES46[key].byTopic[t.cat].count>1),
  repeatedInTopicLevel:t.solutionTypes46.some(key=>QUESTION_DUPLICATES46[key].byTopic[t.cat].levels[t.rank].count>1),
- investmentRule51:t.investmentRule51||null,moneyRule50:t.moneyRule50||null,storyVariants49:t.variants49||[],previousCourseLevel49:LEVEL_CHANGES49.find(x=>x.id===t.id)?.from??t.rank+1,variationPolicy:'Names, numbers and rephrasing do not create an original question.'}));
+ editorialReview52:t.calmReview52,investmentRule51:t.investmentRule51||null,moneyRule50:t.moneyRule50||null,storyVariants49:t.variants49||[],previousCourseLevel49:LEVEL_CHANGES49.find(x=>x.id===t.id)?.from??t.rank+1,variationPolicy:'Names, numbers and rephrasing do not create an original question.'}));
 const QUESTION_COUNTS46=TOPICS.map((topic,cat)=>({topic:topic.name,cat,
  total:ACTIVE.filter(t=>t.cat===cat).length,
  uniqueTypes:new Set(ACTIVE.filter(t=>t.cat===cat).flatMap(t=>t.solutionTypes46)).size,
  levels:[0,1,2,3].map(rank=>{const ts=levelFamilies40(cat,rank);return{level:rank+1,families:ts.length,
   uniqueTypes:new Set(ts.flatMap(t=>t.solutionTypes46)).size,
   repeatedFamilies:QUESTION_CATALOG46.filter(t=>t.cat===cat&&t.level===rank+1&&t.repeatedInTopicLevel).length};})}));
-function getQuestionInventory46(){return JSON.parse(JSON.stringify({version:51,investmentRules51:INVESTMENT_RULES51,newInvestmentFamilies51:NEW_INVESTMENTS51.map(({generator,...meta})=>meta),moneyRules50:MONEY_RULES50,updatedMoneyFamilies50:UPDATED50,uniqueCapacity:{maxPerTopicLevel:MAX_UNIQUE_TYPES49,unit:"calculation-or-decision-type",enforced:true},levelChanges49:LEVEL_CHANGES49,newStoryVariants49:SHOPPING_VARIANTS49.map(({generate,...meta})=>meta),progression:{passScores:[...PASS_SCORES48],fixedLevels:[1,2,3],familiesPerFixedLevel:20,level4Minimum:20,level4Maximum:null,level4MaximumUniqueTypes:MAX_UNIQUE_TYPES49,fullCoverageRequired:true},totalFamilies:ACTIVE.length,totalSolutionTypes:Object.keys(QUESTION_DUPLICATES46).length,
+function getQuestionInventory46(){return JSON.parse(JSON.stringify({version:52,editorialReview52:CALM_REVIEW52,investmentRules51:INVESTMENT_RULES51,newInvestmentFamilies51:NEW_INVESTMENTS51.map(({generator,...meta})=>meta),moneyRules50:MONEY_RULES50,updatedMoneyFamilies50:UPDATED50,uniqueCapacity:{maxPerTopicLevel:MAX_UNIQUE_TYPES49,unit:"calculation-or-decision-type",enforced:true},levelChanges49:LEVEL_CHANGES49,newStoryVariants49:SHOPPING_VARIANTS49.map(({generate,...meta})=>meta),progression:{passScores:[...PASS_SCORES48],fixedLevels:[1,2,3],familiesPerFixedLevel:20,level4Minimum:20,level4Maximum:null,level4MaximumUniqueTypes:MAX_UNIQUE_TYPES49,fullCoverageRequired:true},totalFamilies:ACTIVE.length,totalSolutionTypes:Object.keys(QUESTION_DUPLICATES46).length,
  definition:'Equal calculation/decision steps with the same kind of quantities; random numbers/names are not originals.',
  counts:QUESTION_COUNTS46,groups:QUESTION_DUPLICATES46,questions:QUESTION_CATALOG46,restored:HISTORICAL_RESTORE46}));}
 function exportQuestionInventory46(){
  const blob=new Blob([JSON.stringify(getQuestionInventory46(),null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');
- a.href=url;a.download='Math_Life_Question_Inventory_v51.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+ a.href=url;a.download='Math_Life_Question_Inventory_v52.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
 HELP[0].body='בכל נושא שלוש רמות. המאגר גדל בלי למחוק שאלות קודמות. לכל נושא ולמשחק הכללי בחירת רמה נפרדת. הכיסוי מציג כמה משפחות ניסית מתוך הכמות המעודכנת ברמה. המספר משתנה בין הנושאים והרמות.';
 HELP[1].body='היעדים: 70 ברמה 1, 80 ברמה 2 ו־90 להשלמת רמה 3. לפתיחת רמה חדשה צריך גם לענות על כל המשפחות ברמה הקודמת. טעות נחשבת לכיסוי. רמה שנפתחה כדין לפני הרחבת המאגר נשארת פתוחה; השאלות החדשות עדיין ממתינות לך.';
@@ -7654,6 +7828,12 @@ HELP.splice(HELP.length-1,0,{title:'משכורת ויתרה בבנק',body:'בש
 if(typeof window!=='undefined')window.getQuestionInventory50=getQuestionInventory46;
 if(typeof window!=='undefined')window.getQuestionInventory51=getQuestionInventory46;
 HELP.splice(HELP.length-1,0,{title:'רווחי השקעות ברמה 4',body:'נוספו שלוש משפחות בכסף ולקוחות: רווח בזהב, חצי בזהב וחצי במניות, וממוצע חודשי של רווח שנתי. חלק מהשאלות מבקשות לעגל את סכום ההשקעה לאלף הקרוב. הנתונים הם דוגמאות לפני מס ועלויות, לא תחזית. רווח שנתי חלקי 12 הוא ממוצע בלבד, לא סכום שנכנס בכל חודש. כל הניקוד הקודם נשמר; השאלות החדשות מוסיפות לכיסוי הדרוש להשלמת רמה 4.'});
+
+// V52 wording refresh; keep the final mapping page last for its export action.
+HELP[1].body='יעדי הרמות: 70%, 80%, 90%, 95%. בכל רמה צריך גם לענות על כל המשפחות שבה. טעות נספרת לכיסוי, אבל משפיעה על הציון. אפשר להשלים בכמה משחקים. בזמן משחק רואים את הציון, כמה שאלות כוסו ואת שני חלקי היעד. במשחק כללי הכיסוי כולל את כל ששת הנושאים באותה רמה. את בוחרת אם לעבור לרמה שנפתחה.';
+HELP.splice(HELP.length-1,0,{title:'מרווח קטן, יום רגוע יותר',body:'בתזכורות שאחרי המענה יש רעיונות להכנה מראש, זמן מעבר, כסף לצרכים, טעינה ומנוחה. הן מותאמות לסיפור ואינן מוסיפות מספרים לחישוב. ארבע אפשרויות התשובה נשארו כפי שהיו; מסר על בריאות או רוגע אינו סימון לתשובה הנכונה. כל 483 משפחות השאלות, הניקוד והרמות נשמרו.'});
+if(typeof window!=='undefined')window.getQuestionInventory52=getQuestionInventory46;
+
 if(typeof document!=='undefined')init();
 </script>
 </body>
